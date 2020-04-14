@@ -1,4 +1,5 @@
 import React from 'react';
+import logo from './logo-youtube.svg';
 import './App.css';
 
 const serverPort = 5000;
@@ -32,6 +33,11 @@ class App extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     const { error, isLoaded, showData } = this.state;
     if (showData !== prevState.showData) {
+      // Show loading screen while data is being fetched
+      this.setState({
+        ...this.state,
+        isLoaded: false
+      });
       // Hard-coded fetch to localhost:serverPort
       fetch(`http://localhost:${serverPort}/data`)
       .then(res => res.json())
@@ -63,34 +69,52 @@ class App extends React.Component {
   render() {
     const { error, isLoaded, items, showData } = this.state;
     if (error) {
-      return <div>Error: {error.message}</div>;
+      return (
+        <div className="App">
+          <header className="App-header">
+            Error: {error.message}
+          </header>
+        </div>
+      );
     } else if (!isLoaded) {
-      return <div>Loading...</div>;
+      return (
+        <div className="App">
+          <header className="App-header">
+            Loading...  
+          </header>
+        </div>
+      );
     // After button is pressed,
     // iterates through items array, displays each item on list
     } else if (showData) {
       return (
-        <div>
-          <h1>Binge Watchers</h1>
-          <p>Server Data Recieved:</p>
-          <ul>
-            {items.map(item => (
-              <li key={item.message}>
-                {item.message}
-              </li>
-            ))}
-          </ul>
+        <div className="App">
+          <header className="App-header">
+            <h1>Binge Watchers</h1>
+            <img src={logo} className="App-logo" alt="logo" />
+            <h4>Server Data Recieved</h4>
+            <ul>
+              {items.map(item => (
+                <li key={item.message}>
+                  {item.message}
+                </li>
+              ))}
+            </ul>
+          </header>
         </div>
       );
     // Initial render
     } else {
       return (
-        <div>
-          <h1>Binge Watchers</h1>
-          <button onClick={this.handleClick}>
-            Get Data
-          </button>
-          <p>Waiting on button press...</p>
+        <div className="App">
+          <header className="App-header">
+            <h1>Binge Watchers</h1>
+            <img src={logo} className="App-logo" alt="logo" />
+            <button onClick={this.handleClick}>
+              Get Data
+            </button>
+            <p>Waiting on button press...</p>
+          </header>
         </div>
       );
     }
