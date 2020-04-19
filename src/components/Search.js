@@ -1,4 +1,5 @@
 import React from 'react';
+import { SERVER_PORT } from '../globals';
 
 class Search extends React.Component {
   constructor(props) {

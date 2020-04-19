@@ -1,8 +1,7 @@
 import React from 'react';
 import logo from '../resources/logo-youtube.svg';
 import './Homepage.css';
-
-const serverPort = 5000;
+import { SERVER_PORT } from '../globals';
 
 class Homepage extends React.Component {
   constructor(props) {
@@ -38,8 +37,8 @@ class Homepage extends React.Component {
         ...this.state,
         isLoaded: false
       });
-      // Hard-coded fetch to localhost:serverPort
-      fetch(`http://localhost:${serverPort}/data`)
+      // Hard-coded fetch to localhost:SERVER_PORT
+      fetch(`http://localhost:${SERVER_PORT}/data`)
       .then(res => res.json())
       .then(
         (result) => {
@@ -61,7 +60,7 @@ class Homepage extends React.Component {
         }
       )    
       if (isLoaded && !error) {
-        console.log(`Data from PORT ${serverPort} recieved`);
+        console.log(`Data from PORT ${SERVER_PORT} recieved`);
       }
     }
   }
