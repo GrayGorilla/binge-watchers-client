@@ -1,10 +1,10 @@
 import React from 'react';
-import logo from './logo-youtube.svg';
-import './App.css';
+import logo from '../resources/logo-youtube.svg';
+import './Homepage.css';
 
 const serverPort = 5000;
 
-class App extends React.Component {
+class Homepage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -121,4 +121,4 @@ class App extends React.Component {
   }
 };
 
-export default App;
+export default Homepage;
