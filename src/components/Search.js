@@ -1,8 +1,7 @@
 import React from 'react';
-import { SERVER_PORT } from '../globals';
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField"
-import { makeStyles } from '@material-ui/core/styles';
+// import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -11,31 +10,14 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
+import { SERVER_PORT } from '../globals';
+import './Search.css'
+
 // const useStyles = makeStyles({
 //   table: {
 //     minWidth: 650,
 //   },
 // });
-
-/*
-    Database Columns:
-        video_id
-        trending_date
-        title
-        channel_title
-        category_id
-        publish_time
-        tags
-        views
-        likes
-        dislikes
-        comment_count
-        thumbnail_link
-        comments_disabled
-        ratings_disabled
-        video_error_or_removed
-        description
-*/
 
 class Search extends React.Component {
   constructor(props) {
@@ -264,7 +246,7 @@ class Search extends React.Component {
           </div>
           <div>
             <TableContainer component={Paper}>
-              <Table size="small" aria-label="simple table">
+              <Table className="ResultsTable" size="small" aria-label="simple table">
                 <TableHead>
                   <TableRow>
                     <TableCell align="right">Video ID</TableCell>
@@ -289,6 +271,7 @@ class Search extends React.Component {
                   {
                     entries.map(entry => {
                       return (
+                        // Key = <videoID>-<views>
                         <TableRow key={entry[0] + '-' + entry[8]}>
                           <TableCell align="right">{entry[0]}</TableCell>
                           <TableCell align="right">{entry[1]}</TableCell>
