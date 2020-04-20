@@ -55,54 +55,132 @@ function SimpleTable() {
 class Search extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      error: null,
+      isLoaded: false,
+      entries: [],
+      refresh: false
+    };
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  componentDidMount() {
+    this.setState({
+      ...this.state,
+      isLoaded: true
+    });
+  }
+
+  handleClick() {
+    this.setState({
+      ...this.state,
+      refresh: true
+    });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { error, isLoaded, refresh } = this.state;
+    if (refresh !== prevState.refresh) {
+      // Show loading screen while data is being fetched
+      this.setState({
+        ...this.state,
+        isLoaded: false
+      });
+      // Hard-coded fetch to localhost:SERVER_PORT
+      fetch(`http://localhost:${SERVER_PORT}/data`)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          this.setState({
+            ...this.state,
+            isLoaded: true,
+            entries: result.entries
+          });
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          this.setState({
+            ...this.state,
+            isLoaded: true,
+            error
+          });
+        }
+      )    
+      if (isLoaded && !error) {
+        console.log(`Search data from PORT ${SERVER_PORT} recieved successfully`);
+      }
+    }
   }
   
   render() {
-    return(
-    <div>
-      <div style ={{padding:20}}>
-        <TextField id="text_field_video" label="video_id" style={{marginRight: 10}}/>
-        <TextField id="text_field_trend" label="trending_date" style={{marginRight: 10}}/>
-        <TextField id="text_field_view" label="views" style={{marginRight: 10}}/>
-        <TextField id="text_field_comment_disable" label="comments_disabled" />
-      </div>
-      <div style ={{padding:20}}>
-        <TextField id="text_field_title" label="title" style={{marginRight: 10}}/>
-        <TextField id="text_field_publish" label="publish_time" style={{marginRight: 10}}/>
-        <TextField id="text_field_like" label="likes" style={{marginRight: 10}}/>
-        <TextField id="text_field_rate_disable" label="ratings_disabled" />
-      </div>
-      <div style ={{padding:20}}>
-        <TextField id="text_field_channel" label="channel_title" style={{marginRight: 10}}/>
-        <TextField id="text_field_tag" label="tags" style={{marginRight: 10}}/>
-        <TextField id="text_field_dislike" label="dislikes" style={{marginRight: 10}}/>
-        <TextField id="text_field_error" label="video_error_or_removed" />
-      </div>
-      <div style ={{padding:20}}>
-        <TextField id="text_field_category" label="category_id" style={{marginRight: 10}}/>
-        <TextField id="text_field_thumb" label="thumbnail_link" style={{marginRight: 10}}/>
-        <TextField id="text_field_comment" label="comment_count" style={{marginRight: 10}}/>
-        <TextField id="text_field_description" label="description" />
-      </div>
-      <div style={{padding:20}}>
-        <Button variant="contained" color="primary" style={{marginRight:70}}>
-          search
-        </Button>
-        <Button variant="contained" color="default" style={{marginRight:70}}>
-          insert
-        </Button>
-        <Button variant="contained" color="default" style={{marginRight:70}}>
-          delete
-        </Button>
-        <Button variant="contained" color="secondary" >
-          clear_fields
-        </Button>
-      </div>
-      <div>
-        <SimpleTable />
-      </div>
-    </div>
-  )
+    const { error, isLoaded } = this.state;
+    if (error) {
+      return (
+        <div className="App">
+          <header className="App-header">
+            Error: {error.message}
+          </header>
+        </div>
+      );
+    } else if (!isLoaded) {
+      return (
+        <div className="App">
+          <header className="App-header">
+            Loading...  
+          </header>
+        </div>
+      );
+    // Initial render
+    } else {
+      return (
+        <div className="App">
+          <h1>Search Page</h1>
+          <div style ={{padding:20}}>
+            <TextField id="text_field_video" label="video_id" style={{marginRight: 10}}/>
+            <TextField id="text_field_trend" label="trending_date" style={{marginRight: 10}}/>
+            <TextField id="text_field_view" label="views" style={{marginRight: 10}}/>
+            <TextField id="text_field_comment_disable" label="comments_disabled" />
+          </div>
+          <div style ={{padding:20}}>
+            <TextField id="text_field_title" label="title" style={{marginRight: 10}}/>
+            <TextField id="text_field_publish" label="publish_time" style={{marginRight: 10}}/>
+            <TextField id="text_field_like" label="likes" style={{marginRight: 10}}/>
+            <TextField id="text_field_rate_disable" label="ratings_disabled" />
+          </div>
+          <div style ={{padding:20}}>
+            <TextField id="text_field_channel" label="channel_title" style={{marginRight: 10}}/>
+            <TextField id="text_field_tag" label="tags" style={{marginRight: 10}}/>
+            <TextField id="text_field_dislike" label="dislikes" style={{marginRight: 10}}/>
+            <TextField id="text_field_error" label="video_error_or_removed" />
+          </div>
+          <div style ={{padding:20}}>
+            <TextField id="text_field_category" label="category_id" style={{marginRight: 10}}/>
+            <TextField id="text_field_thumb" label="thumbnail_link" style={{marginRight: 10}}/>
+            <TextField id="text_field_comment" label="comment_count" style={{marginRight: 10}}/>
+            <TextField id="text_field_description" label="description" />
+          </div>
+          <div style={{padding:20}}>
+            <Button variant="contained" color="primary" style={{marginRight:70}}>
+              search
+            </Button>
+            <Button variant="contained" color="default" style={{marginRight:70}}>
+              insert
+            </Button>
+            <Button variant="contained" color="default" style={{marginRight:70}}>
+              delete
+            </Button>
+            <Button variant="contained" color="secondary" >
+              clear_fields
+            </Button>
+          </div>
+          <div>
+            <SimpleTable />
+          </div>
+        </div>
+      )
+    }
   }
 };
 
