@@ -11,45 +11,11 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
-const useStyles = makeStyles({
-  table: {
-    minWidth: 650,
-  },
-});
-
-function SimpleTable() {
-  const classes = useStyles();
-
-  return (
-    <TableContainer component={Paper}>
-      <Table className={classes.table} size="small" aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell align="right">video_id</TableCell>
-            <TableCell align="right">title</TableCell>
-            <TableCell align="right">channel_title</TableCell>
-            <TableCell align="right">category_id</TableCell>
-            <TableCell align="right">trending_date</TableCell>
-            <TableCell align="right">publish_time</TableCell>
-            <TableCell align="right">tags</TableCell>
-            <TableCell align="right">thumbnail_link</TableCell>
-            <TableCell align="right">views</TableCell>
-            <TableCell align="right">likes</TableCell>
-            <TableCell align="right">dislikes</TableCell>
-            <TableCell align="right">comment_count</TableCell>
-            <TableCell align="right">comments_disabled</TableCell>
-            <TableCell align="right">ratings_disabled</TableCell>
-            <TableCell align="right">video_error_or_removed</TableCell>
-            <TableCell align="right">description</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-        
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
-}
+// const useStyles = makeStyles({
+//   table: {
+//     minWidth: 650,
+//   },
+// });
 
 /*
     Database Columns:
@@ -177,7 +143,7 @@ class Search extends React.Component {
             error: null,
             isLoaded: true,
             runSearch: false,
-            entries: result,
+            entries: result.results,
             textFields: {
               videoID: null,
               trendingDate: null,
@@ -235,7 +201,8 @@ class Search extends React.Component {
   }
   
   render() {
-    const { error, isLoaded } = this.state;
+    const { error, isLoaded, entries } = this.state;
+    console.log(entries);
     if (error) {
       return (
         <div className="App">
@@ -296,7 +263,56 @@ class Search extends React.Component {
             </Button>
           </div>
           <div>
-            <SimpleTable />
+            <TableContainer component={Paper}>
+              <Table size="small" aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="right">Video ID</TableCell>
+                    <TableCell align="right">Title</TableCell>
+                    <TableCell align="right">Channel Title</TableCell>
+                    <TableCell align="right">Category ID</TableCell>
+                    <TableCell align="right">Trending Date</TableCell>
+                    <TableCell align="right">Publish Time</TableCell>
+                    <TableCell align="right">Tags</TableCell>
+                    <TableCell align="right">Thumbnail Link</TableCell>
+                    <TableCell align="right">Views</TableCell>
+                    <TableCell align="right">Likes</TableCell>
+                    <TableCell align="right">Dislikes</TableCell>
+                    <TableCell align="right">Comment Count</TableCell>
+                    <TableCell align="right">Comments Disabled</TableCell>
+                    <TableCell align="right">Ratings Disabled</TableCell>
+                    <TableCell align="right">Video Error or Removed</TableCell>
+                    <TableCell align="right">Description</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {
+                    entries.map(entry => {
+                      return (
+                        <TableRow key={entry[0] + '-' + entry[8]}>
+                          <TableCell align="right">{entry[0]}</TableCell>
+                          <TableCell align="right">{entry[1]}</TableCell>
+                          <TableCell align="right">{entry[2]}</TableCell>
+                          <TableCell align="right">{entry[3]}</TableCell>
+                          <TableCell align="right">{entry[4]}</TableCell>
+                          <TableCell align="right">{entry[5]}</TableCell>
+                          <TableCell align="right">{entry[6]}</TableCell>
+                          <TableCell align="right">{entry[7]}</TableCell>
+                          <TableCell align="right">{entry[8]}</TableCell>
+                          <TableCell align="right">{entry[9]}</TableCell>
+                          <TableCell align="right">{entry[10]}</TableCell>
+                          <TableCell align="right">{entry[11]}</TableCell>
+                          <TableCell align="right">{entry[12]}</TableCell>
+                          <TableCell align="right">{entry[13]}</TableCell>
+                          <TableCell align="right">{entry[14]}</TableCell>
+                          <TableCell align="right">{entry[15]}</TableCell>
+                        </TableRow>
+                      );
+                    })
+                  }
+                </TableBody>
+              </Table>
+            </TableContainer>
           </div>
         </div>
       )
