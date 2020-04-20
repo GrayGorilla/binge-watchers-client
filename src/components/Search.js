@@ -1,6 +1,5 @@
 import React from 'react';
 import { SERVER_PORT } from '../globals';
-import ReactDOM from "react-dom";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField"
 import { makeStyles } from '@material-ui/core/styles';
@@ -52,15 +51,54 @@ function SimpleTable() {
   );
 }
 
+/*
+    Database Columns:
+        video_id
+        trending_date
+        title
+        channel_title
+        category_id
+        publish_time
+        tags
+        views
+        likes
+        dislikes
+        comment_count
+        thumbnail_link
+        comments_disabled
+        ratings_disabled
+        video_error_or_removed
+        description
+*/
+
 class Search extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       error: null,
       isLoaded: false,
+      runSearch: false,
       entries: [],
-      refresh: false
+      textFields: {
+        videoID: null,
+        trendingDate: null,
+        title: null,
+        channelTitle: null,
+        categoryID: null,
+        publishTime: null,
+        tags: null,
+        views: null,
+        likes: null,
+        dislikes: null,
+        commentCount: null,
+        thumbnailLink: null,
+        commentsDisabled: null,
+        ratingsDisabled: null,
+        videoErrorOrRemoved: null,
+        description: null
+      }
     };
+    this.handleInputChange = this.handleInputChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
   }
 
@@ -71,30 +109,93 @@ class Search extends React.Component {
     });
   }
 
-  handleClick() {
+  handleInputChange(event) {
+    const id = event.target.id;
+    const value = event.target.value;
+    console.log('Latest input: ' + value);
     this.setState({
       ...this.state,
-      refresh: true
+      textFields: {
+        ...this.state.textFields,
+        [id]: value
+      }
     });
   }
 
+  handleClick() {
+    this.setState({
+      ...this.state,
+      runSearch: true,
+    });
+    console.log('Search Button clicked.')
+  }
+
   componentDidUpdate(prevProps, prevState) {
-    const { error, isLoaded, refresh } = this.state;
-    if (refresh !== prevState.refresh) {
+    const { error, isLoaded, runSearch, textFields } = this.state;
+    if (runSearch && runSearch !== prevState.runSearch) {
       // Show loading screen while data is being fetched
       this.setState({
         ...this.state,
         isLoaded: false
       });
-      // Hard-coded fetch to localhost:SERVER_PORT
-      fetch(`http://localhost:${SERVER_PORT}/data`)
+      // Create Search Query
+      const params = {
+        "video_id": textFields.videoID,
+        "trending_date": textFields.trendingDate,
+        "title": textFields.title,
+        "channel_title": textFields.channelTitle,
+        "category_id": textFields.categoryID,
+        "publish_time": textFields.publishTime,
+        "tags": textFields.tags,
+        "views": textFields.views,
+        "likes": textFields.likes,
+        "dislikes": textFields.dislikes,
+        "comment_count": textFields.commentCount,
+        "thumbnail_link": textFields.thumbnailLink,
+        "comments_disabled": textFields.commentsDisabled,
+        "ratings_disabled": textFields.ratingsDisabled,
+        "video_error_or_removed": textFields.video_error_or_removed,
+        "description": textFields.description
+      };
+      // Generate parameter string for query
+      const esc = encodeURIComponent;
+      let queryList = [];
+
+      for (let key in params) {
+        if (params[key]) {
+          queryList.push(esc(key) + '=' + esc(params[key]))
+        }
+      }
+      const query = queryList.join('&');
+      // Hard-coded fetch to localhost
+      fetch(`http://localhost:${SERVER_PORT}/data?${query}`)
       .then(res => res.json())
       .then(
         (result) => {
+          console.log('JSON response: ', result);
           this.setState({
-            ...this.state,
+            error: null,
             isLoaded: true,
-            entries: result.entries
+            runSearch: false,
+            entries: result,
+            textFields: {
+              videoID: null,
+              trendingDate: null,
+              title: null,
+              channelTitle: null,
+              categoryID: null,
+              publishTime: null,
+              tags: null,
+              views: null,
+              likes: null,
+              dislikes: null,
+              commentCount: null,
+              thumbnailLink: null,
+              commentsDisabled: null,
+              ratingsDisabled: null,
+              videoErrorOrRemoved: null,
+              description: null
+            }
           });
         },
         // Note: it's important to handle errors here
@@ -102,14 +203,33 @@ class Search extends React.Component {
         // exceptions from actual bugs in components.
         (error) => {
           this.setState({
-            ...this.state,
+            error,
             isLoaded: true,
-            error
+            runSearch: false,
+            entries: [],
+            textFields: {
+              videoID: null,
+              trendingDate: null,
+              title: null,
+              channelTitle: null,
+              categoryID: null,
+              publishTime: null,
+              tags: null,
+              views: null,
+              likes: null,
+              dislikes: null,
+              commentCount: null,
+              thumbnailLink: null,
+              commentsDisabled: null,
+              ratingsDisabled: null,
+              videoErrorOrRemoved: null,
+              description: null
+            }
           });
         }
       )    
       if (isLoaded && !error) {
-        console.log(`Search data from PORT ${SERVER_PORT} recieved successfully`);
+        console.log(`Search data from PORT ${SERVER_PORT} recieved successfully.`);
       }
     }
   }
@@ -119,17 +239,17 @@ class Search extends React.Component {
     if (error) {
       return (
         <div className="App">
-          <header className="App-header">
+          <h3>
             Error: {error.message}
-          </header>
+          </h3>
         </div>
       );
     } else if (!isLoaded) {
       return (
         <div className="App">
-          <header className="App-header">
+          <h3>
             Loading...  
-          </header>
+          </h3>
         </div>
       );
     // Initial render
@@ -138,41 +258,41 @@ class Search extends React.Component {
         <div className="App">
           <h1>Search Page</h1>
           <div style ={{padding:20}}>
-            <TextField id="text_field_video" label="video_id" style={{marginRight: 10}}/>
-            <TextField id="text_field_trend" label="trending_date" style={{marginRight: 10}}/>
-            <TextField id="text_field_view" label="views" style={{marginRight: 10}}/>
-            <TextField id="text_field_comment_disable" label="comments_disabled" />
+            <TextField id="videoID" label="Video ID" style={{marginRight: 10}} onChange={event => this.handleInputChange(event)} />
+            <TextField id="trendingDate" label="Trending Date" style={{marginRight: 10}} onChange={event => this.handleInputChange(event)} />
+            <TextField id="views" label="Views" style={{marginRight: 10}} onChange={event => this.handleInputChange(event)} />
+            <TextField id="commentsDisabled" label="Comments Disabled" onChange={event => this.handleInputChange(event)} />
           </div>
           <div style ={{padding:20}}>
-            <TextField id="text_field_title" label="title" style={{marginRight: 10}}/>
-            <TextField id="text_field_publish" label="publish_time" style={{marginRight: 10}}/>
-            <TextField id="text_field_like" label="likes" style={{marginRight: 10}}/>
-            <TextField id="text_field_rate_disable" label="ratings_disabled" />
+            <TextField id="title" label="Title" style={{marginRight: 10}} onChange={event => this.handleInputChange(event)} />
+            <TextField id="publishTime" label="Publish Time" style={{marginRight: 10}} onChange={event => this.handleInputChange(event)} />
+            <TextField id="likes" label="Likes" style={{marginRight: 10}} onChange={event => this.handleInputChange(event)} />
+            <TextField id="ratingsDisabled" label="Ratings Disabled" onChange={event => this.handleInputChange(event)} />
           </div>
           <div style ={{padding:20}}>
-            <TextField id="text_field_channel" label="channel_title" style={{marginRight: 10}}/>
-            <TextField id="text_field_tag" label="tags" style={{marginRight: 10}}/>
-            <TextField id="text_field_dislike" label="dislikes" style={{marginRight: 10}}/>
-            <TextField id="text_field_error" label="video_error_or_removed" />
+            <TextField id="channelTitle" label="Channel Title" style={{marginRight: 10}} onChange={event => this.handleInputChange(event)} />
+            <TextField id="tags" label="Tags" style={{marginRight: 10}} onChange={event => this.handleInputChange(event)} />
+            <TextField id="dislikes" label="Dislikes" style={{marginRight: 10}} onChange={event => this.handleInputChange(event)} />
+            <TextField id="videoErrorOrRemoved" label="Video Error Or Removed" onChange={event => this.handleInputChange(event)} />
           </div>
           <div style ={{padding:20}}>
-            <TextField id="text_field_category" label="category_id" style={{marginRight: 10}}/>
-            <TextField id="text_field_thumb" label="thumbnail_link" style={{marginRight: 10}}/>
-            <TextField id="text_field_comment" label="comment_count" style={{marginRight: 10}}/>
-            <TextField id="text_field_description" label="description" />
+            <TextField id="categoryID" label="Category ID" style={{marginRight: 10}} onChange={event => this.handleInputChange(event)} />
+            <TextField id="thumbnailLink" label="Thumbnail Link" style={{marginRight: 10}} onChange={event => this.handleInputChange(event)} />
+            <TextField id="commentCount" label="Comment Count" style={{marginRight: 10}} onChange={event => this.handleInputChange(event)} />
+            <TextField id="description" label="Description" onChange={event => this.handleInputChange(event)} />
           </div>
           <div style={{padding:20}}>
-            <Button variant="contained" color="primary" style={{marginRight:70}}>
-              search
+            <Button variant="contained" color="primary" style={{marginRight:70}} onClick={this.handleClick}>
+              SEARCH
             </Button>
             <Button variant="contained" color="default" style={{marginRight:70}}>
-              insert
+              INSERT
             </Button>
             <Button variant="contained" color="default" style={{marginRight:70}}>
-              delete
+              DELETE
             </Button>
             <Button variant="contained" color="secondary" >
-              clear_fields
+              CLEAR FIELDS
             </Button>
           </div>
           <div>
