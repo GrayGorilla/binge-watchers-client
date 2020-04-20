@@ -38,7 +38,7 @@ class Homepage extends React.Component {
         isLoaded: false
       });
       // Hard-coded fetch to localhost:SERVER_PORT
-      fetch(`http://localhost:${SERVER_PORT}/data`)
+      fetch(`http://localhost:${SERVER_PORT}/test`)
       .then(res => res.json())
       .then(
         (result) => {
@@ -91,8 +91,8 @@ class Homepage extends React.Component {
           <header className="App-header">
             <h1>Binge Watchers</h1>
             <img src={logo} className="App-logo" alt="logo" />
-            <h4>Server Data Recieved</h4>
-            <ul>
+            <h4>Server Data Message:</h4>
+            <ul className="List-homepage-data">
               {items.map(item => (
                 <li key={item.message}>
                   {item.message}

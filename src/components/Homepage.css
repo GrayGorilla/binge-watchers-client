@@ -40,3 +40,9 @@
     transform: rotate(360deg);
   }
 }
+
+.List-homepage-data {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
