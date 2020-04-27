@@ -27,6 +27,7 @@ class Search extends React.Component {
       error: null,
       isLoaded: false,
       runSearch: false,
+      selected: null,
       entries: [],
       textFields: {
         videoID: null,
@@ -80,11 +81,21 @@ class Search extends React.Component {
     console.log('Search Button clicked.')
   }
 
-  handleSelect() {
-    this.setState({
-      ...this.state,
-    });
-    console.log('Row selected.')
+  handleSelect(event) {
+    const {id} = event.target;
+    const {checked} = event.target;
+    if(checked) {
+      this.setState({
+        ...this.state,
+        selected: id,
+      });
+    } else {
+      this.setState({
+        ...this.state,
+        selected: null,
+      });
+    }
+    console.log('Row Selected.')
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -134,6 +145,7 @@ class Search extends React.Component {
             error: null,
             isLoaded: true,
             runSearch: false,
+            selected: null,
             entries: result.results,
             textFields: {
               videoID: null,
@@ -163,6 +175,7 @@ class Search extends React.Component {
             error,
             isLoaded: true,
             runSearch: false,
+            selected: null,
             entries: [],
             textFields: {
               videoID: null,
@@ -275,11 +288,7 @@ class Search extends React.Component {
                     role="checkbox"
                     //selected={isItemSelected}
                   >
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        
-                      />
-                    </TableCell>
+                    <TableCell padding="checkbox"></TableCell>
                     <TableCell align="right">Video ID</TableCell>
                     <TableCell align="right">Trending Date</TableCell>
                     <TableCell align="right">Title</TableCell>
@@ -301,21 +310,20 @@ class Search extends React.Component {
                 <TableBody>
                   {
                     entries.map(entry => {
-                      //const isItemSelected = isSelected(entry[0]+'-'+entry[8]);
+                      const isItemSelected = entry[0]+'-'+entry[8];
 
                       return (
                         // Key = <videoID>-<views>
                         <TableRow 
-                          key={entry[0] + '-' + entry[8]}
+                          key={entry[0]+'-'+entry[8]}
                           hover
-                          onClick={(event) => this.handleSelect}
                           roll="checkbox"
                           //aria-checked={isItemSelected}
                           //selected={isItemSelected}
                         >
                           <TableCell padding="checkbox">
-                            <Checkbox
-                              //checked={isItemSelected}
+                            <Checkbox id={isItemSelected}
+                              onChange={this.handleSelect}
                             />
                           </TableCell>
                           <TableCell align="right">{entry[0]}</TableCell>
