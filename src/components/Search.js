@@ -9,6 +9,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import Checkbox from '@material-ui/core/Checkbox';
 
 import { SERVER_PORT } from '../globals';
 import './Search.css'
@@ -48,6 +49,7 @@ class Search extends React.Component {
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
   }
 
   componentDidMount() {
@@ -76,6 +78,13 @@ class Search extends React.Component {
       runSearch: true,
     });
     console.log('Search Button clicked.')
+  }
+
+  handleSelect() {
+    this.setState({
+      ...this.state,
+    });
+    console.log('Row selected.')
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -181,8 +190,10 @@ class Search extends React.Component {
       }
     }
   }
+
   
   render() {
+    //const selected = React.useState([]);
     const { error, isLoaded, entries } = this.state;
     console.log(entries);
     if (error) {
@@ -203,6 +214,8 @@ class Search extends React.Component {
       );
     // Initial render
     } else {
+      //const isSelected = (name) => selected.indexOf(name) !== -1;
+
       return (
         <div className="App">
           <h1>Search Page</h1>
@@ -234,33 +247,51 @@ class Search extends React.Component {
             <Button variant="contained" color="primary" style={{marginRight:70}} onClick={this.handleClick}>
               SEARCH
             </Button>
-            <Button variant="contained" color="default" style={{marginRight:70}}>
+            <Button variant="contained" color="default" style={{marginRight:70}} onClick={this.handleClick}>
               INSERT
             </Button>
-            <Button variant="contained" color="default" style={{marginRight:70}}>
+            <Button variant="contained" color="default" style={{marginRight:70}} onClick={this.handleClick}>
               DELETE
             </Button>
-            <Button variant="contained" color="secondary" >
+            <Button variant="contained" color="secondary" onClick={this.handleClick}>
               CLEAR FIELDS
+            </Button>
+          </div>
+          <div>
+            <TextField id="file_name" label="File Name" style={{marginRight: 10}} />
+            <Button variant="contained" color="secondary">
+              SAVE
+            </Button>
+            <Button variant="contained" color="default">
+              Load
             </Button>
           </div>
           <div>
             <TableContainer component={Paper}>
               <Table className="ResultsTable" size="small" aria-label="simple table">
                 <TableHead>
-                  <TableRow>
+                  <TableRow
+                    hover
+                    role="checkbox"
+                    //selected={isItemSelected}
+                  >
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        
+                      />
+                    </TableCell>
                     <TableCell align="right">Video ID</TableCell>
+                    <TableCell align="right">Trending Date</TableCell>
                     <TableCell align="right">Title</TableCell>
                     <TableCell align="right">Channel Title</TableCell>
                     <TableCell align="right">Category ID</TableCell>
-                    <TableCell align="right">Trending Date</TableCell>
                     <TableCell align="right">Publish Time</TableCell>
                     <TableCell align="right">Tags</TableCell>
-                    <TableCell align="right">Thumbnail Link</TableCell>
                     <TableCell align="right">Views</TableCell>
                     <TableCell align="right">Likes</TableCell>
                     <TableCell align="right">Dislikes</TableCell>
                     <TableCell align="right">Comment Count</TableCell>
+                    <TableCell align="right">Thumbnail Link</TableCell>
                     <TableCell align="right">Comments Disabled</TableCell>
                     <TableCell align="right">Ratings Disabled</TableCell>
                     <TableCell align="right">Video Error or Removed</TableCell>
@@ -270,9 +301,23 @@ class Search extends React.Component {
                 <TableBody>
                   {
                     entries.map(entry => {
+                      //const isItemSelected = isSelected(entry[0]+'-'+entry[8]);
+
                       return (
                         // Key = <videoID>-<views>
-                        <TableRow key={entry[0] + '-' + entry[8]}>
+                        <TableRow 
+                          key={entry[0] + '-' + entry[8]}
+                          hover
+                          onClick={(event) => this.handleSelect}
+                          roll="checkbox"
+                          //aria-checked={isItemSelected}
+                          //selected={isItemSelected}
+                        >
+                          <TableCell padding="checkbox">
+                            <Checkbox
+                              //checked={isItemSelected}
+                            />
+                          </TableCell>
                           <TableCell align="right">{entry[0]}</TableCell>
                           <TableCell align="right">{entry[1]}</TableCell>
                           <TableCell align="right">{entry[2]}</TableCell>
