@@ -119,12 +119,9 @@ class Search extends React.Component {
   handleSelect(event) {
     const { id, checked } = event.target;
     const { entries , selected } = this.state;
-    console.log('handleSelect first hit:', selected);
-    console.log('id:', id, typeof(id));
     const idNum = parseInt(id, 10);
-    console.log('idNum:', idNum, typeof(idNum));
     
-    if(checked) {
+    if (checked) {
       selected.push(entries[idNum][0]);   // EntryID
       this.setState({
         ...this.state,
@@ -149,7 +146,7 @@ class Search extends React.Component {
       });
       console.log('Row Selected.');
     } else {
-      let filteredSelect = selected.filter((value, index, array) => {
+      let filteredSelect = selected.filter(value => {
         return value !== entries[idNum][0];
       });
       this.setState({
@@ -559,252 +556,259 @@ class Search extends React.Component {
     console.log('Rendering...');
     if (error) {
       return (
-        <div className="App">
-          <h3>
-            Error: {error.message}
-          </h3>
+        <div className="Search">
+          <header className="Search-header">
+            <h3>
+              Error: {error.message}
+            </h3>
+          </header>
         </div>
       );
     } else if (!isLoaded) {
       return (
-        <div className="App">
-          <h3>
-            Loading...  
-          </h3>
+        <div className="Search">
+          <header className="Search-header">
+            <h3>
+              Loading...  
+            </h3>
+          </header>
         </div>
       );
     // Initial render
     } else {
       return (
-        <div className="App">
-          <h1>Search Page</h1>
-          <div style ={{padding:20}}>
-            <TextField 
-              id="videoID" 
-              label="Video ID" 
-              // defaultValue={this.state.videoID} 
-              style={{marginRight: 10}} 
-              onChange={event => this.handleInputChange(event)} 
-            />
-            <TextField 
-              id="trendingDate" 
-              label="Trending Date" 
-              // defaultValue={this.state.trendingDate} 
-              style={{marginRight: 10}} 
-              onChange={event => this.handleInputChange(event)} 
-            />
-            <TextField 
-              id="views" 
-              label="Views" 
-              // defaultValue={this.state.views}
-              style={{marginRight: 10}} 
-              onChange={event => this.handleInputChange(event)} 
-            />
-            <TextField 
-              id="commentsDisabled" 
-              label="Comments Disabled" 
-              // defaultValue={this.state.commentsDisabled}
-              onChange={event => this.handleInputChange(event)} 
-            />
-          </div>
-          <div style ={{padding:20}}>
-            <TextField 
-              id="title" 
-              // defaultValue={this.state.title}
-              label="Title" 
-              style={{marginRight: 10}} 
-              onChange={event => this.handleInputChange(event)} 
-            />
-            <TextField 
-              id="publishTime" 
-              // defaultValue={this.state.publishTime}
-              label="Publish Time" 
-              style={{marginRight: 10}} 
-              onChange={event => this.handleInputChange(event)} 
-            />
-            <TextField 
-              id="likes" 
-              // defaultValue={this.state.likes}
-              label="Likes" 
-              style={{marginRight: 10}} 
-              onChange={event => this.handleInputChange(event)} 
-            />
-            <TextField 
-              id="ratingsDisabled" 
-              // defaultValue={this.state.ratingsDisabled}
-              label="Ratings Disabled" 
-              onChange={event => this.handleInputChange(event)} 
-            />
-          </div>
-          <div style ={{padding:20}}>
-            <TextField 
-              id="channelTitle" 
-              // defaultValue={this.state.channelTitle}
-              label="Channel Title" 
-              style={{marginRight: 10}} 
-              onChange={event => this.handleInputChange(event)} 
-            />
-            <TextField 
-              id="tags" 
-              // defaultValue={this.state.tags}
-              label="Tags" 
-              style={{marginRight: 10}} 
-              onChange={event => this.handleInputChange(event)} 
-            />
-            <TextField 
-              id="dislikes" 
-              // defaultValue={this.state.dislikes}
-              label="Dislikes" 
-              style={{marginRight: 10}} 
-              onChange={event => this.handleInputChange(event)} 
-            />
-            <TextField 
-              id="videoErrorOrRemoved" 
-              // defaultValue={this.state.videoErrorOrRemoved}
-              label="Video Error Or Removed" 
-              onChange={event => this.handleInputChange(event)} 
-            />
-          </div>
-          <div style ={{padding:20}}>
-            <TextField 
-              id="categoryID" 
-              // defaultValue={this.state.categoryID}
-              label="Category ID" 
-              style={{marginRight: 10}} 
-              onChange={event => this.handleInputChange(event)} 
-            />
-            <TextField 
-              id="thumbnailLink" 
-              // defaultValue={this.state.thumbnailLink}
-              label="Thumbnail Link" 
-              style={{marginRight: 10}} 
-              onChange={event => this.handleInputChange(event)} 
-            />
-            <TextField 
-              id="commentCount" 
-              // defaultValue={this.state.commentCount}
-              label="Comment Count" 
-              style={{marginRight: 10}} 
-              onChange={event => this.handleInputChange(event)} 
-            />
-            <TextField 
-              id="description" 
-              // defaultValue={this.state.description}
-              label="Description" 
-              onChange={event => this.handleInputChange(event)} 
-            />
-          </div>
-          <div style={{padding:20}}>
-            <Button 
-              variant="contained" 
-              color="primary" 
-              style={{marginRight:70}} 
-              onClick={() => this.handleClick(ButtonID.search)}
-            >
-              SEARCH
-            </Button>
-            <Button 
-              variant="contained" 
-              color="default" 
-              style={{marginRight:70}} 
-              onClick={() => this.handleClick(ButtonID.insert)}
-            >
-              INSERT
-            </Button>
-            <Button 
-              variant="contained" 
-              color="default" 
-              style={{marginRight:70}} 
-              onClick={() => this.handleClick(ButtonID.update)}
-            >
-              UPDATE
-            </Button>
-            <Button 
-              variant="contained" 
-              color="secondary" 
-              onClick={() => this.handleClick(ButtonID.delete)}
-            >
-              DELETE
-            </Button>
-          </div>
-          <div>
-            <TextField id="file_name" label="File Name" style={{margin: 10}} />
-            <Button variant="contained" color="secondary" style={{margin: 10}}>
-              SAVE
-            </Button>
-            <Button variant="contained" color="default" style={{margin: 10}}>
-              LOAD
-            </Button>
-          </div>
-          <div>
-            <TableContainer component={Paper}>
-              <Table className="ResultsTable" size="small" aria-label="simple table">
-                <TableHead>
-                  <TableRow
-                    hover
-                    role="checkbox"
-                  >
-                    <TableCell padding="checkbox"></TableCell>
-                    <TableCell align="right">Entry ID</TableCell>
-                    <TableCell align="right">Video ID</TableCell>
-                    <TableCell align="right">Trending Date</TableCell>
-                    <TableCell align="right">Title</TableCell>
-                    <TableCell align="right">Channel Title</TableCell>
-                    <TableCell align="right">Category ID</TableCell>
-                    <TableCell align="right">Publish Time</TableCell>
-                    <TableCell align="right">Tags</TableCell>
-                    <TableCell align="right">Views</TableCell>
-                    <TableCell align="right">Likes</TableCell>
-                    <TableCell align="right">Dislikes</TableCell>
-                    <TableCell align="right">Comment Count</TableCell>
-                    <TableCell align="right">Thumbnail Link</TableCell>
-                    <TableCell align="right">Comments Disabled</TableCell>
-                    <TableCell align="right">Ratings Disabled</TableCell>
-                    <TableCell align="right">Video Error or Removed</TableCell>
-                    <TableCell align="right">Description</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {
-                    entries.map((entry, index) => {
-                      return (
-                        <TableRow 
-                          key={index}
-                          hover
-                          roll="checkbox"
-                        >
-                          <TableCell padding="checkbox">
-                            <Checkbox 
-                              id={index.toString()}
-                              // checked={selected[index]}
-                              onChange={this.handleSelect}
-                            />
-                          </TableCell>
-                          <TableCell align="right">{entry[0]}</TableCell>
-                          <TableCell align="right">{entry[1]}</TableCell>
-                          <TableCell align="right">{entry[2]}</TableCell>
-                          <TableCell align="right">{entry[3]}</TableCell>
-                          <TableCell align="right">{entry[4]}</TableCell>
-                          <TableCell align="right">{entry[5]}</TableCell>
-                          <TableCell align="right">{entry[6]}</TableCell>
-                          <TableCell align="right">{entry[7]}</TableCell>
-                          <TableCell align="right">{entry[8]}</TableCell>
-                          <TableCell align="right">{entry[9]}</TableCell>
-                          <TableCell align="right">{entry[10]}</TableCell>
-                          <TableCell align="right">{entry[11]}</TableCell>
-                          <TableCell align="right">{entry[12]}</TableCell>
-                          <TableCell align="right">{entry[13]}</TableCell>
-                          <TableCell align="right">{entry[14]}</TableCell>
-                          <TableCell align="right">{entry[15]}</TableCell>
-                          <TableCell align="right">{entry[16]}</TableCell>
-                        </TableRow>
-                      );
-                    })
-                  }
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </div>
+        <div className="Search">
+          <header className="Search-header">
+            <h1>Search Page</h1>
+            <div style ={{padding:20}}>
+              <TextField 
+                id="videoID" 
+                label="Video ID" 
+                type="search"
+                // defaultValue={this.state.videoID} 
+                style={{marginRight: 10}} 
+                onChange={event => this.handleInputChange(event)} 
+              />
+              <TextField 
+                id="trendingDate" 
+                label="Trending Date" 
+                // defaultValue={this.state.trendingDate} 
+                style={{marginRight: 10}} 
+                onChange={event => this.handleInputChange(event)} 
+              />
+              <TextField 
+                id="views" 
+                label="Views" 
+                // defaultValue={this.state.views}
+                style={{marginRight: 10}} 
+                onChange={event => this.handleInputChange(event)} 
+              />
+              <TextField 
+                id="commentsDisabled" 
+                label="Comments Disabled" 
+                // defaultValue={this.state.commentsDisabled}
+                onChange={event => this.handleInputChange(event)} 
+              />
+            </div>
+            <div style ={{padding:20}}>
+              <TextField 
+                id="title" 
+                // defaultValue={this.state.title}
+                label="Title" 
+                style={{marginRight: 10}} 
+                onChange={event => this.handleInputChange(event)} 
+              />
+              <TextField 
+                id="publishTime" 
+                // defaultValue={this.state.publishTime}
+                label="Publish Time" 
+                style={{marginRight: 10}} 
+                onChange={event => this.handleInputChange(event)} 
+              />
+              <TextField 
+                id="likes" 
+                // defaultValue={this.state.likes}
+                label="Likes" 
+                style={{marginRight: 10}} 
+                onChange={event => this.handleInputChange(event)} 
+              />
+              <TextField 
+                id="ratingsDisabled" 
+                // defaultValue={this.state.ratingsDisabled}
+                label="Ratings Disabled" 
+                onChange={event => this.handleInputChange(event)} 
+              />
+            </div>
+            <div style ={{padding:20}}>
+              <TextField 
+                id="channelTitle" 
+                // defaultValue={this.state.channelTitle}
+                label="Channel Title" 
+                style={{marginRight: 10}} 
+                onChange={event => this.handleInputChange(event)} 
+              />
+              <TextField 
+                id="tags" 
+                // defaultValue={this.state.tags}
+                label="Tags" 
+                style={{marginRight: 10}} 
+                onChange={event => this.handleInputChange(event)} 
+              />
+              <TextField 
+                id="dislikes" 
+                // defaultValue={this.state.dislikes}
+                label="Dislikes" 
+                style={{marginRight: 10}} 
+                onChange={event => this.handleInputChange(event)} 
+              />
+              <TextField 
+                id="videoErrorOrRemoved" 
+                // defaultValue={this.state.videoErrorOrRemoved}
+                label="Video Error Or Removed" 
+                onChange={event => this.handleInputChange(event)} 
+              />
+            </div>
+            <div style ={{padding:20}}>
+              <TextField 
+                id="categoryID" 
+                // defaultValue={this.state.categoryID}
+                label="Category ID" 
+                style={{marginRight: 10}} 
+                onChange={event => this.handleInputChange(event)} 
+              />
+              <TextField 
+                id="thumbnailLink" 
+                // defaultValue={this.state.thumbnailLink}
+                label="Thumbnail Link" 
+                style={{marginRight: 10}} 
+                onChange={event => this.handleInputChange(event)} 
+              />
+              <TextField 
+                id="commentCount" 
+                // defaultValue={this.state.commentCount}
+                label="Comment Count" 
+                style={{marginRight: 10}} 
+                onChange={event => this.handleInputChange(event)} 
+              />
+              <TextField 
+                id="description" 
+                // defaultValue={this.state.description}
+                label="Description" 
+                onChange={event => this.handleInputChange(event)} 
+              />
+            </div>
+            <div style={{padding:20}}>
+              <Button 
+                variant="contained" 
+                color="primary" 
+                style={{marginRight:70}} 
+                onClick={() => this.handleClick(ButtonID.search)}
+              >
+                SEARCH
+              </Button>
+              <Button 
+                variant="contained" 
+                color="default" 
+                style={{marginRight:70}} 
+                onClick={() => this.handleClick(ButtonID.insert)}
+              >
+                INSERT
+              </Button>
+              <Button 
+                variant="contained" 
+                color="default" 
+                style={{marginRight:70}} 
+                onClick={() => this.handleClick(ButtonID.update)}
+              >
+                UPDATE
+              </Button>
+              <Button 
+                variant="contained" 
+                color="secondary" 
+                onClick={() => this.handleClick(ButtonID.delete)}
+              >
+                DELETE
+              </Button>
+            </div>
+            <div>
+              <TextField id="file_name" label="File Name" style={{margin: 10}} />
+              <Button variant="contained" color="default" style={{margin: 10}}>
+                SAVE
+              </Button>
+              <Button variant="contained" color="default" style={{margin: 10}}>
+                LOAD
+              </Button>
+            </div>
+            <div>
+              <TableContainer component={Paper}>
+                <Table className="ResultsTable" size="small" aria-label="simple table">
+                  <TableHead>
+                    <TableRow
+                      hover
+                      role="checkbox"
+                    >
+                      <TableCell padding="checkbox"></TableCell>
+                      <TableCell align="right">Entry ID</TableCell>
+                      <TableCell align="right">Video ID</TableCell>
+                      <TableCell align="right">Trending Date</TableCell>
+                      <TableCell align="right">Title</TableCell>
+                      <TableCell align="right">Channel Title</TableCell>
+                      <TableCell align="right">Category ID</TableCell>
+                      <TableCell align="right">Publish Time</TableCell>
+                      <TableCell align="right">Tags</TableCell>
+                      <TableCell align="right">Views</TableCell>
+                      <TableCell align="right">Likes</TableCell>
+                      <TableCell align="right">Dislikes</TableCell>
+                      <TableCell align="right">Comment Count</TableCell>
+                      <TableCell align="right">Thumbnail Link</TableCell>
+                      <TableCell align="right">Comments Disabled</TableCell>
+                      <TableCell align="right">Ratings Disabled</TableCell>
+                      <TableCell align="right">Video Error or Removed</TableCell>
+                      <TableCell align="right">Description</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {
+                      entries.map((entry, index) => {
+                        return (
+                          <TableRow 
+                            key={index}
+                            hover
+                            roll="checkbox"
+                          >
+                            <TableCell padding="checkbox">
+                              <Checkbox 
+                                id={index.toString()}
+                                // checked={selected[index]}
+                                onChange={this.handleSelect}
+                              />
+                            </TableCell>
+                            <TableCell align="right">{entry[0]}</TableCell>
+                            <TableCell align="right">{entry[1]}</TableCell>
+                            <TableCell align="right">{entry[2]}</TableCell>
+                            <TableCell align="right">{entry[3]}</TableCell>
+                            <TableCell align="right">{entry[4]}</TableCell>
+                            <TableCell align="right">{entry[5]}</TableCell>
+                            <TableCell align="right">{entry[6]}</TableCell>
+                            <TableCell align="right">{entry[7]}</TableCell>
+                            <TableCell align="right">{entry[8]}</TableCell>
+                            <TableCell align="right">{entry[9]}</TableCell>
+                            <TableCell align="right">{entry[10]}</TableCell>
+                            <TableCell align="right">{entry[11]}</TableCell>
+                            <TableCell align="right">{entry[12]}</TableCell>
+                            <TableCell align="right">{entry[13]}</TableCell>
+                            <TableCell align="right">{entry[14]}</TableCell>
+                            <TableCell align="right">{entry[15]}</TableCell>
+                            <TableCell align="right">{entry[16]}</TableCell>
+                          </TableRow>
+                        );
+                      })
+                    }
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </div>
+          </header>
         </div>
       )
     }
