@@ -11,7 +11,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 
-import { SERVER_PORT, ButtonID } from '../globals';
+import { SERVER_PORT, SERVER_IP, ButtonID } from '../globals';
 import './Search.css'
 
 // const useStyles = makeStyles({
@@ -32,6 +32,8 @@ class Search extends React.Component {
       insertEntry: false,
       deteteEntry: false,
       updateEntry: false,
+      saveInstance: false,
+      loadInstance: false,
       textFields: {
         videoID: null,
         trendingDate: null,
@@ -48,7 +50,8 @@ class Search extends React.Component {
         commentsDisabled: null,
         ratingsDisabled: null,
         videoErrorOrRemoved: null,
-        description: null
+        description: null,
+        fileName: null
       }
     };
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -91,7 +94,7 @@ class Search extends React.Component {
           ...this.state,
           insertEntry: true,
         });
-        console.log('Insert button clicked');
+        console.log('Insert button clicked.');
         break;
 
       case ButtonID.update:
@@ -99,7 +102,7 @@ class Search extends React.Component {
           ...this.state,
           updateEntry: true,
         });
-        console.log('Update button clicked');
+        console.log('Update button clicked.');
         break;
 
       case ButtonID.delete:
@@ -107,9 +110,25 @@ class Search extends React.Component {
           ...this.state,
           deleteEntry: true,
         });
-        console.log('Delete button clicked');
+        console.log('Delete button clicked.');
         break;
-        
+
+      case ButtonID.save:
+        this.setState({
+          ...this.state,
+          saveInstance: true,
+        });
+        console.log('Save button clicked.');
+        break;
+
+      case ButtonID.load:
+        this.setState({
+          ...this.state,
+          loadInstance: true,
+        });
+        console.log('Save button clicked.');
+        break;
+          
       default:
         console.log('Some other button clicked');
         break;
@@ -165,7 +184,9 @@ class Search extends React.Component {
       selected, 
       insertEntry, 
       deleteEntry, 
-      updateEntry 
+      updateEntry,
+      saveInstance,
+      loadInstance
     } = this.state;
 
     // Search button clicked
@@ -204,8 +225,8 @@ class Search extends React.Component {
         }
       }
       const query = queryList.join('&');
-      // Hard-coded fetch to localhost
-      fetch(`http://localhost:${SERVER_PORT}/data?${query}`)
+      // Hard-coded fetch to ${SERVER_IP}
+      fetch(`http://${SERVER_IP}:${SERVER_PORT}/data?${query}`)
       .then(res => res.json())
       .then(
         (result) => {
@@ -219,6 +240,7 @@ class Search extends React.Component {
             isLoaded: true,
             runSearch: false,
             entries: result.results,
+            selected: [],
             textFields: {
               videoID: null,
               trendingDate: null,
@@ -248,6 +270,7 @@ class Search extends React.Component {
             error,
             isLoaded: true,
             runSearch: false,
+            selected: [],
             textFields: {
               videoID: null,
               trendingDate: null,
@@ -313,11 +336,10 @@ class Search extends React.Component {
         }
       }
       const query = queryList.join('&');
-
       const requestOptions = {
         method: 'POST',
       };
-      fetch(`http://localhost:${SERVER_PORT}/data?${query}`, requestOptions)
+      fetch(`http://${SERVER_IP}:${SERVER_PORT}/data?${query}`, requestOptions)
       .then(res => res.json())
       .then(
         (results) => {
@@ -327,6 +349,8 @@ class Search extends React.Component {
             error: null,
             isLoaded: true,
             insertEntry: false,
+            entries: [],
+            selected: [],
             textFields: {
               videoID: null,
               trendingDate: null,
@@ -344,7 +368,8 @@ class Search extends React.Component {
               ratingsDisabled: null,
               videoErrorOrRemoved: null,
               description: null
-            }          });
+            }          
+          });
         },
         (error) =>{
           this.setState({
@@ -352,6 +377,8 @@ class Search extends React.Component {
             error,
             isLoaded: true,
             insertEntry: false,
+            entries: [],
+            selected: [],
             textFields: {
               videoID: null,
               trendingDate: null,
@@ -389,13 +416,10 @@ class Search extends React.Component {
         }
       }
       const query = queryList.join('&');
-
-      console.log('Selected:', query);
-
       const requestOptions = {
         method: 'DELETE',
       };
-      fetch(`http://localhost:${SERVER_PORT}/data?${query}`, requestOptions)
+      fetch(`http://${SERVER_IP}:${SERVER_PORT}/data?${query}`, requestOptions)
       .then(res => res.json())
       .then(
         (results) => {
@@ -404,7 +428,10 @@ class Search extends React.Component {
             ...this.state,
             error: null,
             isLoaded: true,
-            deleteEntry: false,textFields: {
+            deleteEntry: false,
+            entries: [],
+            selected: [],
+            textFields: {
               videoID: null,
               trendingDate: null,
               title: null,
@@ -429,7 +456,10 @@ class Search extends React.Component {
             ...this.state,
             error,
             isLoaded: true,
-            deleteEntry: false,textFields: {
+            deleteEntry: false,
+            entries: [],
+            selected: [],
+            textFields: {
               videoID: null,
               trendingDate: null,
               title: null,
@@ -486,11 +516,10 @@ class Search extends React.Component {
         }
       }
       const query = queryList.join('&');
-
       const requestOptions = {
         method: 'PUT',
       };
-      fetch(`http://localhost:${SERVER_PORT}/data?${query}`, requestOptions)
+      fetch(`http://${SERVER_IP}:${SERVER_PORT}/data?${query}`, requestOptions)
       .then(res => res.json())
       .then(
         (results) => {
@@ -500,6 +529,8 @@ class Search extends React.Component {
             error: null,
             isLoaded: true,
             updateEntry: false,
+            entries: [],
+            selected: [],
             textFields: {
               videoID: null,
               trendingDate: null,
@@ -516,7 +547,8 @@ class Search extends React.Component {
               commentsDisabled: null,
               ratingsDisabled: null,
               videoErrorOrRemoved: null,
-              description: null
+              description: null,
+              fileName: null
             }
           });
         },
@@ -526,6 +558,8 @@ class Search extends React.Component {
             error,
             isLoaded: true,
             updateEntry: false,
+            entries: [],
+            selected: [],
             textFields: {
               videoID: null,
               trendingDate: null,
@@ -542,7 +576,158 @@ class Search extends React.Component {
               commentsDisabled: null,
               ratingsDisabled: null,
               videoErrorOrRemoved: null,
-              description: null
+              description: null,
+              fileName: null
+            }
+          });
+        }
+      );
+    // Save current dataset
+    } else if (saveInstance && saveInstance !== prevState.saveInstance) {
+      this.setState({
+        ...this.state,
+        isLoaded: false
+      });
+      // Create save query
+      const esc = encodeURIComponent;
+      const query = esc('filename') + '=' + esc(textFields.fileName);
+      const requestOptions = { method: 'PUT' };
+
+      fetch(`http://${SERVER_IP}:${SERVER_PORT}/backup?${query}`, requestOptions)
+      .then(res => res.json())
+      .then(
+        (results) => {
+          console.log("Status: ", results.status);
+          this.setState({
+            ...this.state,
+            error: null,
+            isLoaded: true,
+            saveInstance: false,
+            entries: [],
+            selected: [],
+            textFields: {
+              videoID: null,
+              trendingDate: null,
+              title: null,
+              channelTitle: null,
+              categoryID: null,
+              publishTime: null,
+              tags: null,
+              views: null,
+              likes: null,
+              dislikes: null,
+              commentCount: null,
+              thumbnailLink: null,
+              commentsDisabled: null,
+              ratingsDisabled: null,
+              videoErrorOrRemoved: null,
+              description: null,
+              fileName: null
+            }
+          });
+        },
+        (error) =>{
+          this.setState({
+            ...this.state,
+            error,
+            isLoaded: true,
+            saveInstance: false,
+            entries: [],
+            selected: [],
+            textFields: {
+              videoID: null,
+              trendingDate: null,
+              title: null,
+              channelTitle: null,
+              categoryID: null,
+              publishTime: null,
+              tags: null,
+              views: null,
+              likes: null,
+              dislikes: null,
+              commentCount: null,
+              thumbnailLink: null,
+              commentsDisabled: null,
+              ratingsDisabled: null,
+              videoErrorOrRemoved: null,
+              description: null,
+              fileName: null
+            }
+          });
+        }
+      );
+    // Load new dataset
+    } else if (loadInstance && loadInstance !== prevState.loadInstance) {
+      this.setState({
+        ...this.state,
+        isLoaded: false
+      });
+      // Create load query
+      console.log('textfield:::', textFields.fileName)
+      const esc = encodeURIComponent;
+      const query = esc('filename') + '=' + esc(textFields.fileName);
+      console.log('query:::', query)
+      const requestOptions = { method: 'GET' };
+
+      fetch(`http://${SERVER_IP}:${SERVER_PORT}/backup?${query}`, requestOptions)
+      .then(res => res.json())
+      .then(
+        (results) => {
+          console.log("Status: ", results.status);
+          this.setState({
+            ...this.state,
+            error: null,
+            isLoaded: true,
+            loadInstance: false,
+            entries: [],
+            selected: [],
+            textFields: {
+              videoID: null,
+              trendingDate: null,
+              title: null,
+              channelTitle: null,
+              categoryID: null,
+              publishTime: null,
+              tags: null,
+              views: null,
+              likes: null,
+              dislikes: null,
+              commentCount: null,
+              thumbnailLink: null,
+              commentsDisabled: null,
+              ratingsDisabled: null,
+              videoErrorOrRemoved: null,
+              description: null,
+              fileName: null
+            }
+          });
+        },
+        (error) =>{
+          this.setState({
+            ...this.state,
+            error,
+            isLoaded: true,
+            loadInstance: false,
+            entries: [],
+            selected: [],
+            textFields: {
+              videoID: null,
+              trendingDate: null,
+              title: null,
+              channelTitle: null,
+              categoryID: null,
+              publishTime: null,
+              tags: null,
+              views: null,
+              likes: null,
+              dislikes: null,
+              commentCount: null,
+              thumbnailLink: null,
+              commentsDisabled: null,
+              ratingsDisabled: null,
+              videoErrorOrRemoved: null,
+              description: null,
+              fileName: null
             }
           });
         }
@@ -574,11 +759,11 @@ class Search extends React.Component {
           </header>
         </div>
       );
-    // Initial render
+    // Search Page
     } else {
       return (
         <div className="Search">
-          <header className="Search-header">
+          <header>
             <h1>Search Page</h1>
             <div style ={{padding:20}}>
               <TextField 
@@ -731,11 +916,26 @@ class Search extends React.Component {
               </Button>
             </div>
             <div>
-              <TextField id="file_name" label="File Name" style={{margin: 10}} />
-              <Button variant="contained" color="default" style={{margin: 10}}>
+              <TextField 
+                id="fileName" 
+                label="File Name" 
+                style={{margin: 10}} 
+                onChange={event => this.handleInputChange(event)}
+              />
+              <Button 
+                variant="contained" 
+                color="default" 
+                style={{margin: 10}} 
+                onClick={() => this.handleClick(ButtonID.save)}
+              >
                 SAVE
               </Button>
-              <Button variant="contained" color="default" style={{margin: 10}}>
+              <Button 
+                variant="contained" 
+                color="default" 
+                style={{margin: 10}}
+                onClick={() => this.handleClick(ButtonID.load)}
+              >
                 LOAD
               </Button>
             </div>
