@@ -10,6 +10,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import { SERVER_PORT } from '../globals';
 import './Search.css'
@@ -267,7 +268,7 @@ class Search extends React.Component {
               DELETE
             </Button>
             <Button variant="contained" color="secondary" onClick={this.handleClick}>
-              CLEAR FIELDS
+              UPDATE
             </Button>
           </div>
           <div>
@@ -283,8 +284,7 @@ class Search extends React.Component {
             <TableContainer component={Paper}>
               <Table className="ResultsTable" size="small" aria-label="simple table">
                 <TableHead>
-                  <TableRow
-                    hover
+                  <TableRow className="ResultRow"
                     role="checkbox"
                     //selected={isItemSelected}
                   >
@@ -313,26 +313,25 @@ class Search extends React.Component {
                       const isItemSelected = entry[0]+'-'+entry[8];
 
                       return (
-                        // Key = <videoID>-<views>
-                        <TableRow 
+                        <TableRow className="ResultRow" 
                           key={entry[0]+'-'+entry[8]}
                           hover
                           roll="checkbox"
-                          //aria-checked={isItemSelected}
-                          //selected={isItemSelected}
                         >
                           <TableCell padding="checkbox">
                             <Checkbox id={isItemSelected}
                               onChange={this.handleSelect}
                             />
                           </TableCell>
-                          <TableCell align="right">{entry[0]}</TableCell>
+                          <Tooltip title="Add" placement="top">
+                            <TableCell align="right">{entry[0]}</TableCell>
+                          </Tooltip>
                           <TableCell align="right">{entry[1]}</TableCell>
                           <TableCell align="right">{entry[2]}</TableCell>
                           <TableCell align="right">{entry[3]}</TableCell>
                           <TableCell align="right">{entry[4]}</TableCell>
                           <TableCell align="right">{entry[5]}</TableCell>
-                          <TableCell align="right">{entry[6]}</TableCell>
+                          <TableCell className="ResultCell" align="right">{entry[6]}</TableCell>
                           <TableCell align="right">{entry[7]}</TableCell>
                           <TableCell align="right">{entry[8]}</TableCell>
                           <TableCell align="right">{entry[9]}</TableCell>
@@ -341,7 +340,7 @@ class Search extends React.Component {
                           <TableCell align="right">{entry[12]}</TableCell>
                           <TableCell align="right">{entry[13]}</TableCell>
                           <TableCell align="right">{entry[14]}</TableCell>
-                          <TableCell align="right">{entry[15]}</TableCell>
+                          <TableCell className="ResultCell" align="right">{entry[15]}</TableCell>
                         </TableRow>
                       );
                     })
