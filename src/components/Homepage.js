@@ -1,7 +1,8 @@
 import React from 'react';
+import Button from "@material-ui/core/Button";
 import logo from '../resources/logo-youtube.svg';
 import './Homepage.css';
-import { SERVER_PORT } from '../globals';
+import { SERVER_PORT, SERVER_IP } from '../globals';
 
 class Homepage extends React.Component {
   constructor(props) {
@@ -38,7 +39,7 @@ class Homepage extends React.Component {
         isLoaded: false
       });
       // Hard-coded fetch to localhost:SERVER_PORT
-      fetch(`http://localhost:${SERVER_PORT}/test`)
+      fetch(`http://${SERVER_IP}:${SERVER_PORT}/test`)
       .then(res => res.json())
       .then(
         (result) => {
@@ -109,9 +110,9 @@ class Homepage extends React.Component {
           <header className="App-header">
             <h1>Binge Watchers</h1>
             <img src={logo} className="App-logo" alt="logo" />
-            <button onClick={this.handleClick}>
-              Get Data
-            </button>
+            <Button variant="contained" color="default" style={{margin:20}} onClick={this.handleClick}>
+              GET DATA
+            </Button>
             <p>Waiting on button press...</p>
           </header>
         </div>

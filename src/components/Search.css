@@ -35,3 +35,24 @@
   overflow-y: scroll;
   overflow-x: scroll;
 }
+
+.Search {
+  text-align: center;
+}
+
+.Search-header {
+  /* background-color: #282c34; */
+  background-color: white;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(8px + 2vmin);
+  /* color: white; */
+  color: black;
+}
+
+.ResultsTable {
+  min-width: 650;
+}

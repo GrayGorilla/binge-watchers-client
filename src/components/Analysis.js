@@ -1,15 +1,19 @@
 import React from 'react';
+import './Analysis.css';
 
 class Analysis extends React.Component {
   
   render() {
     return (
-      <div>
-        <center>
+      <div className='Analysis'>
+        <header className='Analysis-header'>
           <h1>
             Analysis Page
           </h1>
-        </center>
+          <div>
+            {/* Analysis Body goes here !Q*/}
+          </div>
+        </header>
       </div>
     )
   }
