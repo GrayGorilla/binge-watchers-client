@@ -16,7 +16,7 @@ class Analysis extends React.Component {
       isLoaded: false,
       selection: null,
       textFields: {
-        title: null,
+        category: null,
         channel: null
       }
     };
@@ -72,8 +72,8 @@ class Analysis extends React.Component {
         </header>
         <div>
           <TextField
-            id="title"
-            label = "Title"
+            id="category"
+            label = "Category"
             style = {{marginRight:10}}
             onChange={event => this.handleInputChange(event)}
           />
