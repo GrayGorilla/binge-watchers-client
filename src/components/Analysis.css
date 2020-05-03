@@ -1,8 +1,8 @@
-.Search {
+.Analysis {
   text-align: center;
 }
 
-.Search-header {
+.Analysis-header {
   /* background-color: #282c34; */
   background-color: white;
   min-height: 100vh;
@@ -13,8 +13,4 @@
   font-size: calc(8px + 2vmin);
   /* color: white; */
   color: black;
-}
-
-.ResultsTable {
-  min-width: 650;
 }
