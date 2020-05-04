@@ -110,7 +110,7 @@ class Analysis extends React.Component {
           ...this.state,
           error,
           isLoaded: true,
-          // todo: set category data to null
+          categoryCount: null,
           textFields: {
             category: null,
             channel: null
@@ -234,10 +234,14 @@ class Analysis extends React.Component {
   }
 
   renderData(selected) {
+    const { categoryCount } = this.state;
+    let display;
     console.log('Creating graphic')
-    switch(analytics) {
+    if (analytics) selected = analytics;
+
+    switch(selected) {
       case 1:
-        var display = [];
+        display = [];
         for (let key in data_analyze) {
           if(!(key === "a" || key === "the" || key === "of" || key === "was" || key === "by" || key === "an")) {
             display.push({word:key, count:data_analyze[key]});
@@ -269,7 +273,7 @@ class Analysis extends React.Component {
         );
 
       case 2:
-        var display = [];
+        display = [];
         for (let key in data_analyze) {
           if(!(key === "a" || key === "the" || key === "of" || key === "was" || key === "by" || key === "an")) {
             display.push({word:key, count:data_analyze[key]});
@@ -306,16 +310,43 @@ class Analysis extends React.Component {
             Day of the Week
           </div>
         );
+
       case 4:
-        return(
-          <div>
-            Category
-          </div>
+        display = [];
+        for (let key in categoryCount) {
+          display.push({
+            category: key,
+            count: categoryCount[key]
+          });
+        }
+        display.sort((x, y) => (y.count - x.count));
+        while (display.length > 10) {
+          display.pop();
+        }
+        console.log('Display: ', display);
+
+        return (
+          <Paper>
+            <Chart data={display}>
+              <ArgumentAxis />
+              <ValueAxis max={7} />
+
+              <BarSeries
+                valueField="count"
+                argumentField="category"
+              />
+              <Title text="Top 10 Trending Categories" />
+              <Animation />
+            </Chart>
+          </Paper>
         );
+
       default:
-        return(
+        return (
           <div>
-            Here 
+            <h4>
+              Please select a type of analysis.
+            </h4>
           </div>
         );    
     }
