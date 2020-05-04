@@ -13,6 +13,7 @@ class Analysis extends React.Component {
       isLoaded: false,
       selection: null,
       buzzwords: [],
+      categoryCount: {},
       textFields: {
         category: null,
         channel: null
@@ -20,6 +21,7 @@ class Analysis extends React.Component {
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSelectChange = this.handleSelectChange.bind(this);
+    this.selectCategories = this.selectCategories.bind(this);
   }
 
   componentDidMount() {
@@ -49,6 +51,61 @@ class Analysis extends React.Component {
       ...this.state,
       selection: value,
     });
+    switch (value) {
+      case 1:
+        console.log('In handleSelectChange() - Buzzwords!');
+      break;
+      case 2:
+        console.log('In handleSelectChange() - Tags!');
+      break;
+      case 3:
+        console.log('In handleSelectChange() - Day of the Week!');
+      break;
+      case 4:
+        console.log('In handleSelectChange() - Category!');
+        this.selectCategories();
+      break;
+    }
+  }
+
+  selectCategories() {
+    this.setState({
+      ...this.state,
+      isLoaded: false
+    });
+    // Create Query
+    const esc = encodeURIComponent;
+    const query = esc('categories_count') + '=' + esc('true');
+    fetch(`http://${SERVER_IP}:${SERVER_PORT}/data?${query}`)
+    .then(res => res.json())
+    .then(
+      result => {
+        console.log('JSON category response: ', result);
+        this.setState({
+          ...this.state,
+          error: null,
+          isLoaded: true,
+          categoryCount: result.category_count,
+          textFields: {
+            category: null,
+            channel: null
+          }
+        });
+        console.log('categoryCount: ', this.state.categoryCount);
+      },
+      error => {
+        this.setState({
+          ...this.state,
+          error,
+          isLoaded: true,
+          // todo: set category data to null
+          textFields: {
+            category: null,
+            channel: null
+          }
+        });
+      }
+    )
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -190,6 +247,7 @@ class Analysis extends React.Component {
             />
           </header>
           <div>
+            <br />
             {this.renderData(selection)}
           </div>
         </div>
