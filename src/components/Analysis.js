@@ -1,7 +1,7 @@
 import React from 'react';
 import { SERVER_PORT, SERVER_IP } from '../globals';
 import './Analysis.css';
-import AnalysisTop from './AnalysisTop';
+import AnalysisTop from './shared-components/AnalysisTop';
 import Paper from '@material-ui/core/Paper';
 import {
   Chart,
@@ -324,7 +324,7 @@ class Analysis extends React.Component {
                 valueField="count"
                 argumentField="word"
               />
-              <Title text="Buzzwords" />
+              <Title text="Top 10 Buzzwords of Trending Videos" />
               <Animation />
             </Chart>
           </Paper>
@@ -356,7 +356,7 @@ class Analysis extends React.Component {
                 valueField="count"
                 argumentField="word"
               />
-              <Title text="Tags" />
+              <Title text="Top 10 Tags of Trending Videos" />
               <Animation />
             </Chart>
           </Paper>
@@ -435,26 +435,26 @@ class Analysis extends React.Component {
     const { error, isLoaded, selection } = this.state;
     console.log('Rendering...');
     if(error) {
-      return(
-        <div className='Analysis-header'>
-          <header className = 'Analysis-header'>
+      return (
+        <div className='Analysis'>
+          <header className='Analysis-header'>
             <h3>
               Error: {error.message}
             </h3>
           </header>
         </div>
-      )
+      );
     }
     else if(!isLoaded) {
-      return(
-        <div className='Analysis-header'>
-          <header className = 'Analysis-header'>
+      return (
+        <div className='Analysis'>
+          <header className='Analysis-header'>
             <h3>
               Loading...
             </h3>
           </header>
         </div>
-      )
+      );
     }
     else {
       return (
