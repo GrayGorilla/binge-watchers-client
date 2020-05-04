@@ -11,7 +11,6 @@ import FormControl from "@material-ui/core/FormControl"
 var analytics = 0;
 
 class Analysis extends React.Component {
-  //var analytics = "0";
 
   constructor(props) {
     super(props);
@@ -76,6 +75,7 @@ class Analysis extends React.Component {
       });
       // Create Query
       const params = {
+        "buzzwords": "true",
         "category_id": textFields.category,
         "channel_title": textFields.channel
       };
@@ -90,10 +90,12 @@ class Analysis extends React.Component {
       }
       const query = queryList.join('&');
       // Hard coded fetch to server ip
-      console.log('Stuff::', `http://${SERVER_IP}:${SERVER_PORT}/test`)
+      const requestOptions = {
+        buzzwords: 'true',
+      };
       fetch(`http://${SERVER_IP}:${SERVER_PORT}/data?${query}`)
       .then(res => res.json())
-      .then(
+      .then( 
         (result) => {
           console.log('JSON response: ', result);
           for (let i = 0; i < result.results.length; i++) {
@@ -133,30 +135,30 @@ class Analysis extends React.Component {
     switch(analytics) {
       case 1:
         return(
-          <Button>
+          <div>
             Buzzword
-          </Button>
+          </div>
         )
 
       case 2:
         return(
-          <Button>
+          <div>
             Tags
-          </Button>
+          </div>
         )
 
       case 3:
         return(
-          <Button>
+          <div>
             Day of the Week
-          </Button>
+          </div>
         )
 
       case 4:
         return(
-          <Button>
+          <div>
             Category
-          </Button>
+          </div>
         )
 
       default:
