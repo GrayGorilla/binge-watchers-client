@@ -2,7 +2,18 @@ import React from 'react';
 import { SERVER_PORT, SERVER_IP } from '../globals';
 import './Analysis.css';
 import AnalysisTop from './AnalysisTop';
-let analytics = 0;
+import Paper from '@material-ui/core/Paper';
+import {
+  Chart,
+  BarSeries,
+  Title,
+  ArgumentAxis,
+  ValueAxis,
+} from '@devexpress/dx-react-chart-material-ui';
+import { Animation } from '@devexpress/dx-react-chart';
+
+var analytics = 0;
+var data_analyze;
 
 class Analysis extends React.Component {
 
@@ -51,6 +62,7 @@ class Analysis extends React.Component {
       ...this.state,
       selection: value,
     });
+    analytics = value;
     switch (value) {
       case 1:
         console.log('In handleSelectChange() - Buzzwords!');
@@ -117,79 +129,177 @@ class Analysis extends React.Component {
     console.log('selection', selection);
 
     // Selection changed
-    if(selection === 1 && selection !== prevState.selection) {
+    if(selection && selection !== prevState.selection) {
       this.setState({
         ...this.state,
         isLoaded: false
       });
       // Create Query
-      const params = {
-        "buzzwords": "true",
-        "category_id": textFields.category,
-        "channel_title": textFields.channel
-      };
-      // Generate parameters string
-      const esc = encodeURIComponent;
-      let queryList = [];
+      if(analytics === 1) {
+        const params = {
+          "buzzwords": "true",
+          "category_id": textFields.category,
+          "channel_title": textFields.channel
+        };
 
-      for (let key in params) {
-        if(params[key]) {
-          queryList.push(esc(key) + '=' + esc(params[key]))
+        // Generate parameters string
+        const esc = encodeURIComponent;
+        let queryList = [];
+
+        for (let key in params) {
+          if(params[key]) {
+            queryList.push(esc(key) + '=' + esc(params[key]))
+          }
         }
+        const query = queryList.join('&');
+        // Hard coded fetch to server ip 
+        fetch(`http://${SERVER_IP}:${SERVER_PORT}/data?${query}`)
+        .then(res => res.json())
+        .then( 
+          (result) => {
+            console.log('JSON response: ', result);
+            data_analyze = result.buzzwords;
+            this.setState({
+              ...this.state,
+              error: null,
+              isLoaded: true,
+              buzzwords: result.buzzwords,
+              textFields: {
+                category: null,
+                channel: null
+              }
+            });
+          },
+          (error) => {
+            this.setState({
+              ...this.state,
+              error,
+              isLoaded: true,
+              textFields: {
+                category: null,
+                channel: null,
+              }
+            });
+          }
+        )
       }
-      const query = queryList.join('&');
-      // Hard coded fetch to server ip
-      const requestOptions = {
-        buzzwords: 'true',
-      };
-      fetch(`http://${SERVER_IP}:${SERVER_PORT}/data?${query}`)
-      .then(res => res.json())
-      .then( 
-        (result) => {
-          console.log('JSON response: ', result);
-          this.setState({
-            ...this.state,
-            error: null,
-            isLoaded: true,
-            buzzwords: result.buzzwords,
-            textFields: {
-              category: null,
-              channel: null
-            }
-          });
-          console.log('buzzwords', this.state.buzzwords);
-        },
-        (error) => {
-          this.setState({
-            ...this.state,
-            error,
-            isLoaded: true,
-            buzzwords: [],
-            textFields: {
-              category: null,
-              channel: null,
-            }
-          });
+      if(analytics === 2) {
+        const params = {
+          "individual_tags": "true",
+          "category_id": textFields.category,
+          "channel_title": textFields.channel
+        };
+
+        // Generate parameters string
+        const esc = encodeURIComponent;
+        let queryList = [];
+
+        for (let key in params) {
+          if(params[key]) {
+            queryList.push(esc(key) + '=' + esc(params[key]))
+          }
         }
-      )
+        const query = queryList.join('&');
+        // Hard coded fetch to server ip 
+        fetch(`http://${SERVER_IP}:${SERVER_PORT}/data?${query}`)
+        .then(res => res.json())
+        .then( 
+          (result) => {
+            console.log('JSON response: ', result);
+            data_analyze = result.individual_tags;
+            this.setState({
+              ...this.state,
+              error: null,
+              isLoaded: true,
+              textFields: {
+                category: null,
+                channel: null
+              }
+            });
+          },
+          (error) => {
+            this.setState({
+              ...this.state,
+              error,
+              isLoaded: true,
+              textFields: {
+                category: null,
+                channel: null,
+              }
+            });
+          }
+        )
+      }
     }
   }
 
   renderData(selected) {
     console.log('Creating graphic')
-    switch(selected) {
+    switch(analytics) {
       case 1:
+        var display = [];
+        for (let key in data_analyze) {
+          if(!(key === "a" || key === "the" || key === "of" || key === "was" || key === "by" || key === "an")) {
+            display.push({word:key, count:data_analyze[key]});
+          }
+        }
+        display.sort(function(x,y) {
+          return y.count - x.count;
+        });
+        while(display.length > 10) {
+          display.pop();
+        }
+        console.log(display);
         return(
-          <div>
-            Buzzword
-          </div>
+          <Paper>
+            <Chart
+             data={display}
+            >
+              <ArgumentAxis />
+              <ValueAxis max={7} />
+
+              <BarSeries
+                valueField="count"
+                argumentField="word"
+              />
+              <Title text="Buzzwords" />
+              <Animation />
+            </Chart>
+          </Paper>
         );
+
       case 2:
+        var display = [];
+        for (let key in data_analyze) {
+          if(!(key === "a" || key === "the" || key === "of" || key === "was" || key === "by" || key === "an")) {
+            display.push({word:key, count:data_analyze[key]});
+          }
+        }
+        display.sort(function(x,y) {
+          return y.count - x.count;
+        });
+        while(display.length > 10) {
+          display.pop();
+        }
+        console.log(display);
         return(
-          <div>
-            Tags
-          </div>
+          <Paper>
+            <Chart
+             data={display}
+            >
+              <ArgumentAxis />
+              <ValueAxis max={7} />
+
+              <BarSeries
+                valueField="count"
+                argumentField="word"
+              />
+              <Title text="Tags" />
+              <Animation />
+            </Chart>
+          </Paper>
         );
+
       case 3:
         return(
           <div>
@@ -212,7 +322,7 @@ class Analysis extends React.Component {
   }
 
   render() {
-    const { error, isLoaded, selection, buzzwords } = this.state;
+    const { error, isLoaded, selection } = this.state;
     console.log('Rendering...');
     if(error) {
       return(
