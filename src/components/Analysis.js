@@ -1,14 +1,8 @@
 import React from 'react';
-import { SERVER_PORT, SERVER_IP, ButtonID } from '../globals';
+import { SERVER_PORT, SERVER_IP } from '../globals';
 import './Analysis.css';
-import TextField from "@material-ui/core/TextField"
-import Button from "@material-ui/core/Button"
-import Select from "@material-ui/core/Select"
-import MenuItem from "@material-ui/core/MenuItem"
-import InputLabel from "@material-ui/core/InputLabel"
-import FormControl from "@material-ui/core/FormControl"
-
-var analytics = 0;
+import AnalysisTop from './AnalysisTop';
+let analytics = 0;
 
 class Analysis extends React.Component {
 
@@ -18,7 +12,7 @@ class Analysis extends React.Component {
       error: null,
       isLoaded: false,
       selection: null,
-      entries: [],
+      buzzwords: [],
       textFields: {
         category: null,
         channel: null
@@ -51,24 +45,22 @@ class Analysis extends React.Component {
   handleSelectChange(type) {
     const value = type.target.value;
     console.log(value);
-    analytics=value;
     this.setState({
       ...this.state,
       selection: value,
     });
-    console.log(analytics);
   }
 
   componentDidUpdate(prevProps, prevState) {
     const {
-      error,
-      isLoaded,
       textFields,
       selection
     } = this.state;
 
+    console.log('selection', selection);
+
     // Selection changed
-    if(selection && selection !== prevState.selection) {
+    if(selection === 1 && selection !== prevState.selection) {
       this.setState({
         ...this.state,
         isLoaded: false
@@ -98,28 +90,24 @@ class Analysis extends React.Component {
       .then( 
         (result) => {
           console.log('JSON response: ', result);
-          for (let i = 0; i < result.results.length; i++) {
-            result.results[i].unshift(result.resultsIndex[i]);
-          }
           this.setState({
             ...this.state,
             error: null,
             isLoaded: true,
-            selection: prevState.selection,
-            entries: [],
+            buzzwords: result.buzzwords,
             textFields: {
               category: null,
               channel: null
             }
           });
+          console.log('buzzwords', this.state.buzzwords);
         },
         (error) => {
           this.setState({
             ...this.state,
             error,
             isLoaded: true,
-            selection: prevState.selection,
-            entries: [],
+            buzzwords: [],
             textFields: {
               category: null,
               channel: null,
@@ -130,49 +118,44 @@ class Analysis extends React.Component {
     }
   }
 
-  render_data(selected) {
+  renderData(selected) {
     console.log('Creating graphic')
-    switch(analytics) {
+    switch(selected) {
       case 1:
         return(
           <div>
             Buzzword
           </div>
-        )
-
+        );
       case 2:
         return(
           <div>
             Tags
           </div>
-        )
-
+        );
       case 3:
         return(
           <div>
             Day of the Week
           </div>
-        )
-
+        );
       case 4:
         return(
           <div>
             Category
           </div>
-        )
-
+        );
       default:
         return(
           <div>
             Here 
           </div>
-        )
-
+        );    
+    }
   }
-}
 
   render() {
-    const{error, isLoaded, entries, selection} = this.state;
+    const { error, isLoaded, selection, buzzwords } = this.state;
     console.log('Rendering...');
     if(error) {
       return(
@@ -197,50 +180,21 @@ class Analysis extends React.Component {
       )
     }
     else {
-    return (
-      <div className='Analysis'>
-        <header className='Analysis-header'>
-          <h1>
-            Analysis Page
-          </h1> 
-        </header>
-        <div>
-          <TextField
-            id="category"
-            label = "Category"
-            style = {{marginRight:10}}
-            onChange={event => this.handleInputChange(event)}
-          />
-          <TextField
-            id="channel"
-            label="Channel"
-            style = {{marginRight:10}}
-            onChange={event => this.handleInputChange(event)}
-          />
+      return (
+        <div className='Analysis'>
+          <header className='Analysis-header'>
+            <AnalysisTop 
+              selection
+              handleInputChange={this.handleInputChange} 
+              handleSelectChange={this.handleSelectChange}
+            />
+          </header>
+          <div>
+            {this.renderData(selection)}
+          </div>
         </div>
-        <div>
-          <FormControl style={{minWidth:150}}>
-            <InputLabel id="analysis">Analysis</InputLabel>
-            <Select
-              labelId="analysis"
-              id="analysis"
-              autoWidth
-              value=''
-              onChange={event => this.handleSelectChange(event)}
-            >
-            <MenuItem value={1}>Buzzwords</MenuItem>
-            <MenuItem value={2}>Tags</MenuItem>
-            <MenuItem value={3}>Day of the Week</MenuItem>
-            <MenuItem value={4}>Category</MenuItem>
-            </Select>
-          </FormControl>
-        </div>
-        <div>
-          {this.render_data(this.selection)}
-        </div>
-      </div>
-    )
-  }
+      );
+    }
   }
 };
 
