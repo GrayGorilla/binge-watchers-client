@@ -24,7 +24,8 @@ class Analysis extends React.Component {
       isLoaded: false,
       selection: null,
       buzzwords: [],
-      categoryCount: {},
+      trendingDays: {},
+      topCategories: {},
       textFields: {
         category: null,
         channel: null
@@ -32,6 +33,7 @@ class Analysis extends React.Component {
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSelectChange = this.handleSelectChange.bind(this);
+    this.selectDayOfWeek = this.selectDayOfWeek.bind(this);
     this.selectCategories = this.selectCategories.bind(this);
   }
 
@@ -72,12 +74,68 @@ class Analysis extends React.Component {
       break;
       case 3:
         console.log('In handleSelectChange() - Day of the Week!');
+        this.selectDayOfWeek();
       break;
       case 4:
         console.log('In handleSelectChange() - Category!');
         this.selectCategories();
       break;
     }
+  }
+
+  selectDayOfWeek() {
+    this.setState({
+      ...this.state,
+      isLoaded: false
+    });
+    const { textFields } = this.state;
+    // Create Query
+    const params = {
+      "day_of_the_week": "true",
+      "category_id": textFields.category,
+      "channel_title": textFields.channel
+    };
+    // Generate parameters string
+    const esc = encodeURIComponent;
+    let queryList = [];
+
+    for (let key in params) {
+      if (params[key]) {
+        queryList.push(esc(key) + '=' + esc(params[key]));
+      }
+    }
+    const query = queryList.join('&');
+    // Fetch from server
+    fetch(`http://${SERVER_IP}:${SERVER_PORT}/data?${query}`)
+    .then(res => res.json())
+    .then(
+      result => {
+        console.log('JSON dayOfWeek response: ', result);
+        this.setState({
+          ...this.state,
+          error: null,
+          isLoaded: true,
+          trendingDays: result.day_of_the_week,
+          textFields: {
+            category: null,
+            channel: null
+          }
+        });
+        console.log('trendingDays: ', this.state.trendingDays);
+      },
+      error => {
+        this.setState({
+          ...this.state,
+          error,
+          isLoaded: true,
+          trendingDays: {},
+          textFields: {
+            category: null,
+            channel: null
+          }
+        });
+      }
+    )
   }
 
   selectCategories() {
@@ -97,20 +155,20 @@ class Analysis extends React.Component {
           ...this.state,
           error: null,
           isLoaded: true,
-          categoryCount: result.category_count,
+          topCategories: result.category_count,
           textFields: {
             category: null,
             channel: null
           }
         });
-        console.log('categoryCount: ', this.state.categoryCount);
+        console.log('topCategories: ', this.state.topCategories);
       },
       error => {
         this.setState({
           ...this.state,
           error,
           isLoaded: true,
-          categoryCount: null,
+          topCategories: null,
           textFields: {
             category: null,
             channel: null
@@ -234,7 +292,7 @@ class Analysis extends React.Component {
   }
 
   renderData(selected) {
-    const { categoryCount } = this.state;
+    const { trendingDays, topCategories } = this.state;
     let display;
     console.log('Creating graphic')
     if (analytics) selected = analytics;
@@ -305,18 +363,39 @@ class Analysis extends React.Component {
         );
 
       case 3:
+        // Bar Graph: Top Days for Trending Videos
+        display = [];
+        for (let key in trendingDays) {
+          display.push({
+            weekDay: key,
+            count: trendingDays[key]
+          });
+        }
+        display.sort((x, y) => (y.count - x.count));
+        console.log('Display: ', display);
+
         return(
-          <div>
-            Day of the Week
-          </div>
+          <Paper>
+            <Chart data={display}>
+              <ArgumentAxis />
+              <ValueAxis max={7} />
+
+              <BarSeries
+                valueField="count"
+                argumentField="weekDay"
+              />
+              <Title text="Top Days for Trending Videos" />
+            </Chart>
+          </Paper>
         );
 
       case 4:
+        // Bar Graph: Top 10 Trending Categories
         display = [];
-        for (let key in categoryCount) {
+        for (let key in topCategories) {
           display.push({
             category: key,
-            count: categoryCount[key]
+            count: topCategories[key]
           });
         }
         display.sort((x, y) => (y.count - x.count));
