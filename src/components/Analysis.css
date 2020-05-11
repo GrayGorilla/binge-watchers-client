@@ -16,10 +16,10 @@
 }
 
 .Form {
-  minWidth: 10000;
+  min-width: 10000;
   margin: 1000;
 }
 
 .Select {
-  minWidth: 10000;
+  min-width: 10000;
 }

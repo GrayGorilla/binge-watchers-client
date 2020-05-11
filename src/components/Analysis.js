@@ -11,6 +11,7 @@ import {
   ValueAxis,
 } from '@devexpress/dx-react-chart-material-ui';
 import { Animation } from '@devexpress/dx-react-chart';
+import { ButtonID, LOCATION } from '../globals';
 
 var analytics = 0;
 var data_analyze;
@@ -22,7 +23,8 @@ class Analysis extends React.Component {
     this.state = {
       error: null,
       isLoaded: false,
-      selection: null,
+      analysisSelection: null,
+      locationSelection: 0,
       buzzwords: [],
       trendingDays: {},
       topCategories: {},
@@ -33,6 +35,9 @@ class Analysis extends React.Component {
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSelectChange = this.handleSelectChange.bind(this);
+    this.handleFileChange = this.handleFileChange.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.loadData = this.loadData.bind(this);
     this.selectDayOfWeek = this.selectDayOfWeek.bind(this);
     this.selectCategories = this.selectCategories.bind(this);
   }
@@ -62,7 +67,7 @@ class Analysis extends React.Component {
     console.log(value);
     this.setState({
       ...this.state,
-      selection: value,
+      analysisSelection: value,
     });
     analytics = value;
     switch (value) {
@@ -81,6 +86,70 @@ class Analysis extends React.Component {
         this.selectCategories();
       break;
     }
+  }
+
+  handleFileChange(event) {
+    const { value } = event.target;
+    this.setState({
+      ...this.state,
+      locationSelection: value
+    });
+  }
+
+  handleClick(button) {
+    switch (button) {
+      // Get Analysis
+      case ButtonID.analysis:
+        alert('Not implemented yet');
+        break;
+      // Load Data
+      case ButtonID.load:
+        this.loadData();
+        break;
+    }
+  }
+
+  loadData() {
+    this.setState({
+      ...this.state,
+      isLoaded: false
+    });
+    const { locationSelection } = this.state;
+    // Custom
+    if (locationSelection == 11) {
+      alert('Not implemented yet');
+      this.setState({
+        ...this.state,
+        isLoaded: true,
+      });
+      return;
+    }
+    let fileName = LOCATION[locationSelection] + 'videos'
+    
+    const esc = encodeURIComponent;
+    const query = esc('filename') + '=' + esc(fileName);
+    const requestOptions = { method: 'GET' };
+    fetch(`http://${SERVER_IP}:${SERVER_PORT}/backup?${query}`, requestOptions)
+    .then(res => res.json())
+    .then(
+      results => {
+        console.log("Status: ", results.status);
+        this.setState({
+          ...this.state,
+          error: null,
+          isLoaded: true,
+        });
+      }
+    )
+    .then(
+      error => {
+        this.setState({
+          ...this.state,
+          error,
+          isLoaded: true,
+        });
+      }
+    )
   }
 
   selectDayOfWeek() {
@@ -181,13 +250,13 @@ class Analysis extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     const {
       textFields,
-      selection
+      analysisSelection
     } = this.state;
 
-    console.log('selection', selection);
+    console.log('analysisSelection', analysisSelection);
 
-    // Selection changed
-    if(selection && selection !== prevState.selection) {
+    // Analysis Selection changed
+    if(analysisSelection && analysisSelection !== prevState.analysisSelection) {
       this.setState({
         ...this.state,
         isLoaded: false
@@ -432,7 +501,7 @@ class Analysis extends React.Component {
   }
 
   render() {
-    const { error, isLoaded, selection } = this.state;
+    const { error, isLoaded, analysisSelection, locationSelection } = this.state;
     console.log('Rendering...');
     if(error) {
       return (
@@ -460,15 +529,17 @@ class Analysis extends React.Component {
       return (
         <div className='Analysis'>
           <header className='Analysis-header'>
-            <AnalysisTop 
-              selection
+            <AnalysisTop
+              locationSelection={locationSelection}
               handleInputChange={this.handleInputChange} 
               handleSelectChange={this.handleSelectChange}
+              handleFileChange={this.handleFileChange}
+              handleClick={this.handleClick}
             />
           </header>
           <div>
             <br />
-            {this.renderData(selection)}
+            {this.renderData(analysisSelection)}
           </div>
         </div>
       );
