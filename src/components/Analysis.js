@@ -28,13 +28,14 @@ class Analysis extends React.Component {
     this.state = {
       error: null,
       isLoaded: false,
-      analysisSelection: null,
+      analysisSelection: 0,
       locationSelection: 0,
       buzzwords: [],
       trendingDays: {},
       topCategories: {},
       dates: {},
       comments: {},
+      globalVideos: {},
       textFields: {
         category: null,
         channel: null
@@ -49,6 +50,7 @@ class Analysis extends React.Component {
     this.selectCategories = this.selectCategories.bind(this);
     this.selectDate = this.selectDate.bind(this);
     this.selectComment = this.selectComment.bind(this);
+    this.selectGlobalVideos = this.selectGlobalVideos.bind(this);
   }
 
   componentDidMount() {
@@ -82,26 +84,33 @@ class Analysis extends React.Component {
     switch (value) {
       case 1:
         console.log('In handleSelectChange() - Buzzwords!');
-      break;
+        break;
       case 2:
         console.log('In handleSelectChange() - Tags!');
-      break;
+        break;
       case 3:
         console.log('In handleSelectChange() - Day of the Week!');
         this.selectDayOfWeek();
-      break;
+        break;
       case 4:
         console.log('In handleSelectChange() - Category!');
         this.selectCategories();
-      break;
+        break;
       case 5:
         console.log('In handleSelectChange() - Date!');
         this.selectDate();
-      break;
+        break;
       case 6:
         console.log('In handleSelectChange() - Comments!');
         this.selectComment();
-      break;
+        break;
+      case 7:
+        console.log('In handleSelectChange() - Global Videos!');
+        this.selectGlobalVideos();
+        break;
+      default:
+        alert('Unknown item selected');
+        break;
     }
   }
 
@@ -123,6 +132,9 @@ class Analysis extends React.Component {
       case ButtonID.load:
         this.loadData();
         break;
+      default:
+        alert('Unknown button clicked');
+        break;
     }
   }
 
@@ -133,7 +145,7 @@ class Analysis extends React.Component {
     });
     const { locationSelection } = this.state;
     // Custom
-    if (locationSelection == 11) {
+    if (locationSelection === 11) {
       alert('Not implemented yet');
       this.setState({
         ...this.state,
@@ -374,6 +386,62 @@ class Analysis extends React.Component {
     )
   }
 
+  selectGlobalVideos() {
+    this.setState({
+      isLoaded: false
+    });
+    console.log('In global videos')
+    fetch(`http://${SERVER_IP}:${SERVER_PORT}/world_videos`)
+    .then(res => res.json())
+    .then(
+      results => {
+        let gv = {
+          one: 0,
+          two: 0,
+          three: 0,
+          four: 0,
+          other: 0
+        };
+        for (let video in results.unique_videos) {
+          switch (results.unique_videos[video]) {
+            case 1:
+              gv.one++;
+              break;
+            case 2:
+              gv.two++;
+              break;
+            case 3:
+              gv.three++;
+              break;
+            case 4:
+              gv.four++;
+              break;
+            default:
+              console.log('New number!');
+              gv.other++;
+              break;
+          }
+        }
+        this.setState({
+          ...this.state,
+          error: null,
+          isLoaded: true,
+          globalVideos: gv
+        });
+      }
+    )
+    .then(
+      error => {
+        this.setState({
+          ...this.state,
+          error,
+          isLoaded: true,
+          // globalVideos: {}
+        });
+      }
+    )
+  }
+
   componentDidUpdate(prevProps, prevState) {
     const {
       textFields,
@@ -488,7 +556,7 @@ class Analysis extends React.Component {
   }
 
   renderData(selected) {
-    const { trendingDays, topCategories, dates, comments } = this.state;
+    const { trendingDays, topCategories, dates, comments, globalVideos } = this.state;
     let display;
     let metric;
     let value;
@@ -653,6 +721,7 @@ class Analysis extends React.Component {
             </Table>
           </Paper>
         );
+
       case 6:
         display = [];
         var i;
@@ -692,6 +761,24 @@ class Analysis extends React.Component {
             </Chart>
           </Paper>
         );
+      
+      // Global Videos
+      case 7:
+        console.log('globalVideos::', globalVideos)
+          return (
+            <div>
+              <br/>
+              <h3>Global Videos</h3>
+              <br/>
+              <h5>{globalVideos.four} videos went trending in all four countries.</h5>
+              <br/>
+              <h5>{globalVideos.three} videos went trending in three out of four countries.</h5>
+              <br/>
+              <h5>{globalVideos.two} videos went trending in two out of four countries.</h5>
+              <br/>
+              <h5>{globalVideos.one} videos did not transend country boarders, and only went trending in one country.</h5>
+            </div>
+          );
 
       default:
         return (
@@ -732,7 +819,7 @@ class Analysis extends React.Component {
     else {
       return (
         <div className='Analysis'>
-          <header className='Analysis-header'>
+          <header>
             <AnalysisTop
               locationSelection={locationSelection}
               handleInputChange={this.handleInputChange} 

@@ -17,19 +17,6 @@ function AnalysisTop(props) {
         Analysis Page
       </h1> 
       <div>
-        <TextField
-          id="category"
-          label = "Category"
-          style = {{marginRight:30}}
-          onChange={event => props.handleInputChange(event)}
-        />
-        <TextField
-          id="channel"
-          label="Channel"
-          onChange={event => props.handleInputChange(event)}
-        />
-      </div>
-      <div>
         <FormControl style={{minWidth:150, marginRight:30}}>
           <InputLabel id="analysis">Analysis</InputLabel>
           <Select
@@ -45,9 +32,10 @@ function AnalysisTop(props) {
           <MenuItem value={4}>Category</MenuItem>
           <MenuItem value={5}>Date</MenuItem>
           <MenuItem value={6}>Comments</MenuItem>
+          <MenuItem value={7}>Global Vidoes</MenuItem>
           </Select>
         </FormControl>
-        <FormControl style={{minWidth:150}}>
+        <FormControl style={{minWidth:150, marginRight:30}}>
           <InputLabel id="location">Location</InputLabel>
           <Select
             labelId="location"
@@ -70,6 +58,17 @@ function AnalysisTop(props) {
           </Select>
           <FormHelperText>Selected: {LOCATION[props.locationSelection]}</FormHelperText>
         </FormControl>
+        <TextField
+          id="category"
+          label = "Category"
+          style = {{marginRight:30}}
+          onChange={event => props.handleInputChange(event)}
+        />
+        <TextField
+          id="channel"
+          label="Channel"
+          onChange={event => props.handleInputChange(event)}
+        />
       </div>
       <div>
         <Button
