@@ -39,6 +39,8 @@ function AnalysisTop(props) {
           <MenuItem value={2}>Tags</MenuItem>
           <MenuItem value={3}>Day of the Week</MenuItem>
           <MenuItem value={4}>Category</MenuItem>
+          <MenuItem value={5}>Date</MenuItem>
+          <MenuItem value={6}>Comments</MenuItem>
           </Select>
         </FormControl>
       </div>
