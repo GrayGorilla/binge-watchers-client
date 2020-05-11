@@ -2,6 +2,10 @@ import React from 'react';
 import { SERVER_PORT, SERVER_IP } from '../globals';
 import './Analysis.css';
 import AnalysisTop from './shared-components/AnalysisTop';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import {
   Chart,
@@ -9,6 +13,7 @@ import {
   Title,
   ArgumentAxis,
   ValueAxis,
+  ScatterSeries,
 } from '@devexpress/dx-react-chart-material-ui';
 import { Animation } from '@devexpress/dx-react-chart';
 import { ButtonID, LOCATION } from '../globals';
@@ -28,6 +33,8 @@ class Analysis extends React.Component {
       buzzwords: [],
       trendingDays: {},
       topCategories: {},
+      dates: {},
+      comments: {},
       textFields: {
         category: null,
         channel: null
@@ -40,6 +47,8 @@ class Analysis extends React.Component {
     this.loadData = this.loadData.bind(this);
     this.selectDayOfWeek = this.selectDayOfWeek.bind(this);
     this.selectCategories = this.selectCategories.bind(this);
+    this.selectDate = this.selectDate.bind(this);
+    this.selectComment = this.selectComment.bind(this);
   }
 
   componentDidMount() {
@@ -84,6 +93,14 @@ class Analysis extends React.Component {
       case 4:
         console.log('In handleSelectChange() - Category!');
         this.selectCategories();
+      break;
+      case 5:
+        console.log('In handleSelectChange() - Date!');
+        this.selectDate();
+      break;
+      case 6:
+        console.log('In handleSelectChange() - Comments!');
+        this.selectComment();
       break;
     }
   }
@@ -247,6 +264,116 @@ class Analysis extends React.Component {
     )
   }
 
+  selectDate() {
+    this.setState({
+      ...this.state,
+      isLoaded: false
+    });
+    const { textFields } = this.state;
+    // Create Query
+    const params = {
+      "days_til_trending": "true",
+      "category_id": textFields.category,
+      "channel_title": textFields.channel
+    };
+    // Generate parameters string
+    const esc = encodeURIComponent;
+    let queryList = [];
+
+    for (let key in params) {
+      if (params[key]) {
+        queryList.push(esc(key) + '=' + esc(params[key]));
+      }
+    }
+    const query = queryList.join('&');
+    // Fetch from server
+    fetch(`http://${SERVER_IP}:${SERVER_PORT}/data?${query}`)
+    .then(res => res.json())
+    .then(
+      result => {
+        console.log('JSON date response: ', result);
+        this.setState({
+          ...this.state,
+          error: null,
+          isLoaded: true,
+          dates: result.days_til_trending,
+          textFields: {
+            category: null,
+            channel: null
+          }
+        });
+        console.log('trendingDays: ', this.state.dates);
+      },
+      error => {
+        this.setState({
+          ...this.state,
+          error,
+          isLoaded: true,
+          //trendingDays: {},
+          textFields: {
+            category: null,
+            channel: null
+          }
+        });
+      }
+    )
+  }
+
+  selectComment() {
+    this.setState({
+      ...this.state,
+      isLoaded: false
+    });
+    const { textFields } = this.state;
+    // Create Query
+    const params = {
+      "comments_data": "true",
+      "category_id": textFields.category,
+      "channel_title": textFields.channel
+    };
+    // Generate parameters string
+    const esc = encodeURIComponent;
+    let queryList = [];
+
+    for (let key in params) {
+      if (params[key]) {
+        queryList.push(esc(key) + '=' + esc(params[key]));
+      }
+    }
+    const query = queryList.join('&');
+    // Fetch from server
+    fetch(`http://${SERVER_IP}:${SERVER_PORT}/data?${query}`)
+    .then(res => res.json())
+    .then(
+      result => {
+        console.log('JSON comment response: ', result);
+        this.setState({
+          ...this.state,
+          error: null,
+          isLoaded: true,
+          comments: result.comments_data,
+          textFields: {
+            category: null,
+            channel: null
+          }
+        });
+        console.log('comments: ', this.state.comments);
+      },
+      error => {
+        this.setState({
+          ...this.state,
+          error,
+          isLoaded: true,
+          //trendingDays: {},
+          textFields: {
+            category: null,
+            channel: null
+          }
+        });
+      }
+    )
+  }
+
   componentDidUpdate(prevProps, prevState) {
     const {
       textFields,
@@ -361,8 +488,10 @@ class Analysis extends React.Component {
   }
 
   renderData(selected) {
-    const { trendingDays, topCategories } = this.state;
+    const { trendingDays, topCategories, dates, comments } = this.state;
     let display;
+    let metric;
+    let value;
     console.log('Creating graphic')
     if (analytics) selected = analytics;
 
@@ -485,6 +614,81 @@ class Analysis extends React.Component {
               />
               <Title text="Top 10 Trending Categories" />
               <Animation />
+            </Chart>
+          </Paper>
+        );
+
+      case 5:
+        //values for trending dates
+        metric = [];
+        value = [];
+        for (let key in dates) {
+          metric.push(key)
+          value.push(dates[key])
+        }
+        return (
+          <Paper>
+            <div>
+              How long does it take for a video to trend?
+            </div>
+            <Table aria-label="simple table">
+              <TableBody>
+                <TableRow>
+                  <TableCell align="right">{metric[2]}</TableCell>
+                  <TableCell align="right">{value[2]} days</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell align="right">{metric[3]}</TableCell>
+                  <TableCell align="right">{value[3]} days</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell align="right">{metric[0]}</TableCell>
+                  <TableCell align="right">{value[0]} days</TableCell>
+                </TableRow>
+                 <TableRow>
+                  <TableCell align="right">{metric[1]}</TableCell>
+                  <TableCell align="right">{value[1]} days</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </Paper>
+        );
+      case 6:
+        display = [];
+        var i;
+        for(i=0; i<comments.length; i++) {
+          if(comments[i][2] === "True") {
+            display.push({
+              arg1 : comments[i][1],
+              val1 : comments[i][0],
+              arg2 : 0,
+              val2 : 0
+            });
+          }
+          else {
+            display.push({
+              arg2 : comments[i][1],
+              val2 : comments[i][0],
+              arg1 : 0,
+              val1 : 0
+            });
+          }
+        }
+        console.log(display);
+        return (
+          <Paper>
+            <Chart data={display}>
+              <ArgumentAxis showGrid />
+              <ValueAxis />
+              <ScatterSeries
+                valueField="val1"
+                argumentField="arg1"
+              />
+              <ScatterSeries
+                valueField="val2"
+                argumentField="arg2"
+              />
+              <Title text="Disabled Comments Relation to Ratio of Likes to Dislikes" />
             </Chart>
           </Paper>
         );
