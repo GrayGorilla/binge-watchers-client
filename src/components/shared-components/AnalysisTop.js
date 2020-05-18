@@ -15,7 +15,7 @@ function AnalysisTop(props) {
     <div>
       <h1>
         Analysis Page
-      </h1> 
+      </h1>
       <div>
         <FormControl style={{minWidth:150, marginRight:30}}>
           <InputLabel id="analysis">Analysis</InputLabel>
