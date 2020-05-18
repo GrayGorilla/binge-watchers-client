@@ -16,7 +16,7 @@
 }
 
 .ResultsTable {
-  min-width: 650;
+  min-width: 100px;
   max-height: 10;
 }
 
@@ -31,6 +31,7 @@
 
 .ResultCell {
   max-width: 300px;
+  min-width: 100px;
   /* max-height: 1px; */
   overflow-y: scroll;
   overflow-x: scroll;
