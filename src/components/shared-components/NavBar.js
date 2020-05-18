@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -15,33 +16,38 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(4),
     marginLeft: theme.spacing(4),
     alignSelf: 'center',
+    color: 'white',
   },
   appBar: {
     alignItems: 'center',
+    backgroundColor: '#1d1d1d',
   },
   title: {
     flexGrow: 1,
   },
 }));
 
-function NavBar(props) {
+export default (props) => {
   const classes = useStyles();
-
   return (
     <AppBar className={classes.appBar} position="static">
       <Toolbar>
-        <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-          <HomeIcon onClick={() => alert('Clicked!!')} />
-        </IconButton>
-        <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-          <SearchIcon onClick={() => alert('Clicked!!')} />
-        </IconButton>
-        <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-          <AssessmentIcon onClick={() => alert('Clicked!!')} />
-        </IconButton>
+        <Link to="/">
+          <IconButton edge="start" className={classes.menuButton} aria-label="menu">
+            <HomeIcon />
+          </IconButton>
+        </Link>
+        <Link to="/search">
+          <IconButton edge="start" className={classes.menuButton} aria-label="menu">
+            <SearchIcon />
+          </IconButton>
+        </Link>
+        <Link to ="/analysis">
+          <IconButton edge="start" className={classes.menuButton} aria-label="menu">
+            <AssessmentIcon />
+          </IconButton>
+        </Link>
       </Toolbar>
     </AppBar>
   );
 }
-
-export default NavBar;
