@@ -6,5 +6,7 @@ export const ButtonID = {
   update: 2,
   delete: 3,
   save: 4,
-  load: 5
+  load: 5,
+  analysis: 6,
 };
+export const LOCATION = [ "none", "US", "CA", "DE", "FR", "GB", "IN", "JP", "KR", "MX", "RU", "Custom" ];
