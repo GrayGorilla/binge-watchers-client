@@ -1,6 +1,7 @@
 import React from 'react';
 import { SERVER_PORT, SERVER_IP } from '../globals';
 import './Analysis.css';
+import NavBar from './shared-components/NavBar';
 import AnalysisTop from './shared-components/AnalysisTop';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -820,6 +821,7 @@ class Analysis extends React.Component {
       return (
         <div className='Analysis'>
           <header>
+            <NavBar/>
             <AnalysisTop
               locationSelection={locationSelection}
               handleInputChange={this.handleInputChange} 
