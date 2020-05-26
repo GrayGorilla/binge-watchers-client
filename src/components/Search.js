@@ -12,6 +12,7 @@ import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 import EllipsisText from "react-ellipsis-text";
 
+import NavBar from '../components/shared-components/NavBar';
 import { SERVER_PORT, SERVER_IP, ButtonID } from '../globals';
 import './Search.css'
 
@@ -743,7 +744,9 @@ class Search extends React.Component {
     if (error) {
       return (
         <div className="Search">
+          <NavBar />
           <header className="Search-header">
+            <br />
             <h3>
               Error: {error.message}
             </h3>
@@ -753,6 +756,7 @@ class Search extends React.Component {
     } else if (!isLoaded) {
       return (
         <div className="Search">
+          <NavBar />
           <header className="Search-header">
             <h3>
               Loading...  
@@ -764,6 +768,7 @@ class Search extends React.Component {
     } else {
       return (
         <div className="Search">
+          <NavBar />
           <header>
             <h1>Search Page</h1>
             <div style ={{padding:20}}>

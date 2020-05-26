@@ -16,6 +16,7 @@ import {
   ScatterSeries,
 } from '@devexpress/dx-react-chart-material-ui';
 import { Animation } from '@devexpress/dx-react-chart';
+import NavBar from '../components/shared-components/NavBar';
 import { ButtonID, LOCATION } from '../globals';
 
 class Analysis extends React.Component {
@@ -857,6 +858,7 @@ class Analysis extends React.Component {
     if(error) {
       return (
         <div className='Analysis'>
+          <NavBar />
           <header className='Analysis-header'>
             <h3>
               Error: {error.message}
@@ -868,6 +870,7 @@ class Analysis extends React.Component {
     else if(!isLoaded) {
       return (
         <div className='Analysis'>
+          <NavBar />
           <header className='Analysis-header'>
             <h3>
               Loading...
@@ -879,6 +882,7 @@ class Analysis extends React.Component {
     else {
       return (
         <div className='Analysis'>
+          <NavBar />
           <header>
             <AnalysisTop
               analysisSelection={analysisSelection}

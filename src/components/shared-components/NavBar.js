@@ -27,27 +27,31 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default (props) => {
+const NavBar = () => {
   const classes = useStyles();
   return (
-    <AppBar className={classes.appBar} position="static">
-      <Toolbar>
-        <Link to="/">
-          <IconButton edge="start" className={classes.menuButton} aria-label="menu">
-            <HomeIcon />
-          </IconButton>
-        </Link>
-        <Link to="/search">
-          <IconButton edge="start" className={classes.menuButton} aria-label="menu">
-            <SearchIcon />
-          </IconButton>
-        </Link>
-        <Link to ="/analysis">
-          <IconButton edge="start" className={classes.menuButton} aria-label="menu">
-            <AssessmentIcon />
-          </IconButton>
-        </Link>
-      </Toolbar>
-    </AppBar>
+    <div className={classes.root}>
+      <AppBar className={classes.appBar} position="static">
+        <Toolbar>
+          <Link to="/">
+            <IconButton edge="start" className={classes.menuButton} aria-label="menu">
+              <HomeIcon />
+            </IconButton>
+          </Link>
+          <Link to="/search">
+            <IconButton edge="start" className={classes.menuButton} aria-label="menu">
+              <SearchIcon />
+            </IconButton>
+          </Link>
+          <Link to ="/analysis">
+            <IconButton edge="start" className={classes.menuButton} aria-label="menu">
+              <AssessmentIcon />
+            </IconButton>
+          </Link>
+        </Toolbar>
+      </AppBar>
+    </div>
   );
 }
+
+export default NavBar;

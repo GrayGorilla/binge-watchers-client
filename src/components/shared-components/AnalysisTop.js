@@ -8,7 +8,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import Button from '@material-ui/core/Button';
 import { ButtonID, ANALYSIS, LOCATION } from '../../globals';
 
-function AnalysisTop(props) {
+const AnalysisTop = (props) => {
   // Disable load button unless a location has been selected
   const loadDisabled = props.locationSelection ? false : true;
   return (

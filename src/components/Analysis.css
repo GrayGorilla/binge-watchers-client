@@ -1,17 +1,16 @@
 .Analysis {
+  min-height: 100vh;
   text-align: center;
+  background-color: white;
 }
 
 .Analysis-header {
-  /* background-color: #282c34; */
-  background-color: white;
-  min-height: 10vh;
+  min-height: 50vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(8px + 2vmin);
-  /* color: white; */
   color: black;
 }
 
