@@ -16,10 +16,8 @@ import {
   ScatterSeries,
 } from '@devexpress/dx-react-chart-material-ui';
 import { Animation } from '@devexpress/dx-react-chart';
+import NavBar from '../components/shared-components/NavBar';
 import { ButtonID, LOCATION } from '../globals';
-
-var analytics = 0;
-var data_analyze;
 
 class Analysis extends React.Component {
 
@@ -31,6 +29,8 @@ class Analysis extends React.Component {
       analysisSelection: 0,
       locationSelection: 0,
       buzzwords: [],
+      buzz: {},
+      tag: {},
       trendingDays: {},
       topCategories: {},
       dates: {},
@@ -46,6 +46,8 @@ class Analysis extends React.Component {
     this.handleFileChange = this.handleFileChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.loadData = this.loadData.bind(this);
+    this.selectBuzzword = this.selectBuzzword.bind(this);
+    this.selectTag = this.selectTag.bind(this);
     this.selectDayOfWeek = this.selectDayOfWeek.bind(this);
     this.selectCategories = this.selectCategories.bind(this);
     this.selectDate = this.selectDate.bind(this);
@@ -80,38 +82,6 @@ class Analysis extends React.Component {
       ...this.state,
       analysisSelection: value,
     });
-    analytics = value;
-    switch (value) {
-      case 1:
-        console.log('In handleSelectChange() - Buzzwords!');
-        break;
-      case 2:
-        console.log('In handleSelectChange() - Tags!');
-        break;
-      case 3:
-        console.log('In handleSelectChange() - Day of the Week!');
-        this.selectDayOfWeek();
-        break;
-      case 4:
-        console.log('In handleSelectChange() - Category!');
-        this.selectCategories();
-        break;
-      case 5:
-        console.log('In handleSelectChange() - Date!');
-        this.selectDate();
-        break;
-      case 6:
-        console.log('In handleSelectChange() - Comments!');
-        this.selectComment();
-        break;
-      case 7:
-        console.log('In handleSelectChange() - Global Videos!');
-        this.selectGlobalVideos();
-        break;
-      default:
-        alert('Unknown item selected');
-        break;
-    }
   }
 
   handleFileChange(event) {
@@ -123,10 +93,43 @@ class Analysis extends React.Component {
   }
 
   handleClick(button) {
+    const { analysisSelection } = this.state;
     switch (button) {
       // Get Analysis
       case ButtonID.analysis:
-        alert('Not implemented yet');
+        switch (analysisSelection) {
+          case 1:
+            console.log('In handleClick() - Buzzwords!');
+            this.selectBuzzword();
+            break;
+          case 2:
+            console.log('In handleClick() - Tags!');
+            this.selectTag();
+            break;
+          case 3:
+            console.log('In handleClick() - Day of the Week!');
+            this.selectDayOfWeek();
+            break;
+          case 4:
+            console.log('In handleClick() - Category!');
+            this.selectCategories();
+            break;
+          case 5:
+            console.log('In handleClick() - Date!');
+            this.selectDate();
+            break;
+          case 6:
+            console.log('In handleClick() - Comments!');
+            this.selectComment();
+            break;
+          case 7:
+            console.log('In handleClick() - Global Videos!');
+            this.selectGlobalVideos();
+            break;
+          default:
+            alert('Please select analysis from dropdown.');
+            break;
+        }
         break;
       // Load Data
       case ButtonID.load:
@@ -179,6 +182,117 @@ class Analysis extends React.Component {
         });
       }
     )
+  }
+
+  selectBuzzword() {
+    this.setState({
+      ...this.state,
+      isLoaded: false
+    });
+    const { textFields } = this.state;
+    // Create Query
+    const params = {
+      "buzzwords": "true",
+      "category_id": textFields.category,
+      "channel_title": textFields.channel
+    };
+    // Generate parameters string
+    const esc = encodeURIComponent;
+    let queryList = [];
+
+    for (let key in params) {
+      if (params[key]) {
+        queryList.push(esc(key) + '=' + esc(params[key]));
+      }
+    }
+    const query = queryList.join('&');
+    // Fetch from server
+    fetch(`http://${SERVER_IP}:${SERVER_PORT}/data?${query}`)
+    .then(res => res.json())
+    .then(
+      result => {
+        console.log('JSON buzzword response: ', result);
+        this.setState({
+          ...this.state,
+          error: null,
+          isLoaded: true,
+          buzz: result.buzzwords,
+          textFields: {
+            category: null,
+            channel: null
+          }
+        });
+        console.log('buzzwords: ', this.state.buzz);
+      },
+      error => {
+        this.setState({
+          ...this.state,
+          error,
+          isLoaded: true,
+          trendingDays: {},
+          textFields: {
+            category: null,
+            channel: null
+          }
+        });
+      }
+    )
+  }
+
+  selectTag() {
+    this.setState({
+      ...this.state,
+      isLoaded: false
+    });
+    const { textFields } = this.state;
+    // Create Query
+    const params = {
+      "individual_tags": "true",
+      "category_id": textFields.category,
+      "channel_title": textFields.channel
+    };
+    // Generate parameters string
+    const esc = encodeURIComponent;
+    let queryList = [];
+
+    for (let key in params) {
+      if (params[key]) {
+        queryList.push(esc(key) + '=' + esc(params[key]));
+      }
+    }
+    const query = queryList.join('&');
+    // Fetch from server
+    fetch(`http://${SERVER_IP}:${SERVER_PORT}/data?${query}`)
+    .then(res => res.json())
+    .then(
+      result => {
+        console.log('JSON tags response: ', result);
+        this.setState({
+          ...this.state,
+          error: null,
+          isLoaded: true,
+          tag: result.individual_tags,
+          textFields: {
+            category: null,
+            channel: null
+          }
+        });
+        console.log('tags: ', this.state.tag);
+      },
+      error => {
+        this.setState({
+          ...this.state,
+          error,
+          isLoaded: true,
+          trendingDays: {},
+          textFields: {
+            category: null,
+            channel: null
+          }
+        });
+      }
+    )
+
   }
 
   selectDayOfWeek() {
@@ -376,7 +490,6 @@ class Analysis extends React.Component {
           ...this.state,
           error,
           isLoaded: true,
-          //trendingDays: {},
           textFields: {
             category: null,
             channel: null
@@ -443,132 +556,37 @@ class Analysis extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const {
-      textFields,
-      analysisSelection
-    } = this.state;
-
-    console.log('analysisSelection', analysisSelection);
+    const { analysisSelection } = this.state;
 
     // Analysis Selection changed
     if(analysisSelection && analysisSelection !== prevState.analysisSelection) {
       this.setState({
         ...this.state,
-        isLoaded: false
-      });
-      // Create Query
-      if(analytics === 1) {
-        const params = {
-          "buzzwords": "true",
-          "category_id": textFields.category,
-          "channel_title": textFields.channel
-        };
-
-        // Generate parameters string
-        const esc = encodeURIComponent;
-        let queryList = [];
-
-        for (let key in params) {
-          if(params[key]) {
-            queryList.push(esc(key) + '=' + esc(params[key]))
-          }
-        }
-        const query = queryList.join('&');
-        // Hard coded fetch to server ip 
-        fetch(`http://${SERVER_IP}:${SERVER_PORT}/data?${query}`)
-        .then(res => res.json())
-        .then( 
-          (result) => {
-            console.log('JSON response: ', result);
-            data_analyze = result.buzzwords;
-            this.setState({
-              ...this.state,
-              error: null,
-              isLoaded: true,
-              buzzwords: result.buzzwords,
-              textFields: {
-                category: null,
-                channel: null
-              }
-            });
-          },
-          (error) => {
-            this.setState({
-              ...this.state,
-              error,
-              isLoaded: true,
-              textFields: {
-                category: null,
-                channel: null,
-              }
-            });
-          }
-        )
-      }
-      if(analytics === 2) {
-        const params = {
-          "individual_tags": "true",
-          "category_id": textFields.category,
-          "channel_title": textFields.channel
-        };
-
-        // Generate parameters string
-        const esc = encodeURIComponent;
-        let queryList = [];
-
-        for (let key in params) {
-          if(params[key]) {
-            queryList.push(esc(key) + '=' + esc(params[key]))
-          }
-        }
-        const query = queryList.join('&');
-        // Hard coded fetch to server ip 
-        fetch(`http://${SERVER_IP}:${SERVER_PORT}/data?${query}`)
-        .then(res => res.json())
-        .then( 
-          (result) => {
-            console.log('JSON response: ', result);
-            data_analyze = result.individual_tags;
-            this.setState({
-              ...this.state,
-              error: null,
-              isLoaded: true,
-              textFields: {
-                category: null,
-                channel: null
-              }
-            });
-          },
-          (error) => {
-            this.setState({
-              ...this.state,
-              error,
-              isLoaded: true,
-              textFields: {
-                category: null,
-                channel: null,
-              }
-            });
-          }
-        )
-      }
+        isLoaded: true
+      }); 
     }
   }
 
   renderData(selected) {
-    const { trendingDays, topCategories, dates, comments, globalVideos } = this.state;
+    const { buzz, tag, trendingDays, topCategories, dates, comments, globalVideos } = this.state;
     let display;
     let metric;
     let value;
     console.log('Creating graphic')
-    if (analytics) selected = analytics;
 
     switch(selected) {
       case 1:
         display = [];
-        for (let key in data_analyze) {
+        if (JSON.stringify(buzz) === '{}') {
+          return (
+            <h4>
+              No data on Top 10 Buzzwords to display.
+            </h4>
+          );
+        }
+        for (let key in buzz) {
           if(!(key === "a" || key === "the" || key === "of" || key === "was" || key === "by" || key === "an")) {
-            display.push({word:key, count:data_analyze[key]});
+            display.push({word:key, count:buzz[key]});
           }
         }
         display.sort(function(x,y) {
@@ -598,9 +616,16 @@ class Analysis extends React.Component {
 
       case 2:
         display = [];
-        for (let key in data_analyze) {
+        if (JSON.stringify(tag) === '{}') {
+          return (
+            <h4>
+              No data on Top 10 Tags to display.
+            </h4>
+          );
+        }
+        for (let key in tag) {
           if(!(key === "a" || key === "the" || key === "of" || key === "was" || key === "by" || key === "an")) {
-            display.push({word:key, count:data_analyze[key]});
+            display.push({word:key, count:tag[key]});
           }
         }
         display.sort(function(x,y) {
@@ -631,6 +656,13 @@ class Analysis extends React.Component {
       case 3:
         // Bar Graph: Top Days for Trending Videos
         display = [];
+        if (JSON.stringify(trendingDays) === '{}') {
+          return (
+            <h4>
+              No data on Top Days of the Week to display.
+            </h4>
+          );
+        }
         for (let key in trendingDays) {
           display.push({
             weekDay: key,
@@ -658,6 +690,13 @@ class Analysis extends React.Component {
       case 4:
         // Bar Graph: Top 10 Trending Categories
         display = [];
+        if (JSON.stringify(topCategories) === '{}') {
+          return (
+            <h4>
+              No data on Top 10 Trending Categories to display.
+            </h4>
+          );
+        }
         for (let key in topCategories) {
           display.push({
             category: key,
@@ -690,6 +729,13 @@ class Analysis extends React.Component {
         //values for trending dates
         metric = [];
         value = [];
+        if (JSON.stringify(dates) === '{}') {
+          return (
+            <h4>
+              No data on Time 'til Trending to display.
+            </h4>
+          );
+        }
         for (let key in dates) {
           metric.push(key)
           value.push(dates[key])
@@ -725,6 +771,13 @@ class Analysis extends React.Component {
       case 6:
         display = [];
         var i;
+        if (! comments.length) {
+          return (
+            <h4>
+              No data on Disabled Comments compared to Likes/Dislikes Ratio to display.
+            </h4>
+          );
+        }
         for(i=0; i<comments.length; i++) {
           if(comments[i][2] === "True") {
             display.push({
@@ -764,19 +817,27 @@ class Analysis extends React.Component {
       
       // Global Videos
       case 7:
-        console.log('globalVideos::', globalVideos)
+        const { one, two, three, four } = globalVideos;
+        const sum = one + two + three + four;
+        if (! sum) {
+          return (
+            <h4>
+              No data on Global Videos to display.
+            </h4>
+          );
+        }
           return (
             <div>
               <br/>
               <h3>Global Videos</h3>
               <br/>
-              <h5>{globalVideos.four} videos went trending in all four countries.</h5>
+              <h5>{four} videos went trending in all four countries.</h5>
               <br/>
-              <h5>{globalVideos.three} videos went trending in three out of four countries.</h5>
+              <h5>{three} videos went trending in three out of four countries.</h5>
               <br/>
-              <h5>{globalVideos.two} videos went trending in two out of four countries.</h5>
+              <h5>{two} videos went trending in two out of four countries.</h5>
               <br/>
-              <h5>{globalVideos.one} videos did not transend country boarders, and only went trending in one country.</h5>
+              <h5>{one} videos did not transend country boarders, and only went trending in one country.</h5>
             </div>
           );
 
@@ -797,6 +858,7 @@ class Analysis extends React.Component {
     if(error) {
       return (
         <div className='Analysis'>
+          <NavBar />
           <header className='Analysis-header'>
             <h3>
               Error: {error.message}
@@ -808,6 +870,7 @@ class Analysis extends React.Component {
     else if(!isLoaded) {
       return (
         <div className='Analysis'>
+          <NavBar />
           <header className='Analysis-header'>
             <h3>
               Loading...
@@ -819,8 +882,10 @@ class Analysis extends React.Component {
     else {
       return (
         <div className='Analysis'>
+          <NavBar />
           <header>
             <AnalysisTop
+              analysisSelection={analysisSelection}
               locationSelection={locationSelection}
               handleInputChange={this.handleInputChange} 
               handleSelectChange={this.handleSelectChange}

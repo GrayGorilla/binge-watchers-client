@@ -1,28 +1,27 @@
-.App {
+.Search {
+  min-height: 100vh;
   text-align: center;
+  background-color: white;
 }
 
-.App-header {
-  /* background-color: #282c34; */
-  background-color: black;
-  min-height: 100vh;
+.Search-header {
+  min-height: 50vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  /* color: white; */
-  color: white;
+  font-size: calc(8px + 2vmin);
+  color: black;
 }
 
 .ResultsTable {
-  min-width: 650;
+  min-width: 100px;
   max-height: 10;
 }
 
 .ResultRow {
   max-width: 40px;
-  //background-color: #eee;
+  /* background-color: #eee; */
   overflow-y: scroll;
   overflow-x: scroll;
   height: 10px;
@@ -31,26 +30,10 @@
 
 .ResultCell {
   max-width: 300px;
-  //max-height: 1px;
+  min-width: 100px;
+  /* max-height: 1px; */
   overflow-y: scroll;
   overflow-x: scroll;
-}
-
-.Search {
-  text-align: center;
-}
-
-.Search-header {
-  /* background-color: #282c34; */
-  background-color: white;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(8px + 2vmin);
-  /* color: white; */
-  color: black;
 }
 
 .ResultsTable {

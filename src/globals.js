@@ -9,4 +9,5 @@ export const ButtonID = {
   load: 5,
   analysis: 6,
 };
-export const LOCATION = [ "none", "US", "CA", "DE", "FR", "GB", "IN", "JP", "KR", "MX", "RU", "Custom" ];
+export const LOCATION = [ 'none', 'US', 'CA', 'DE', 'FR', 'GB', 'IN', 'JP', 'KR', 'MX', 'RU', 'Custom' ];
+export const ANALYSIS = [ 'none', 'Buzzwords', 'Tags', 'Day of the Week', 'Category', 'Date', 'Comments', 'Global Videos' ];

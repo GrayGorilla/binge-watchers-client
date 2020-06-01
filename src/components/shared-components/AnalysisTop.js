@@ -6,16 +6,16 @@ import InputLabel from "@material-ui/core/InputLabel"
 import FormControl from "@material-ui/core/FormControl"
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Button from '@material-ui/core/Button';
-import { ButtonID, LOCATION } from '../../globals';
+import { ButtonID, ANALYSIS, LOCATION } from '../../globals';
 
-function AnalysisTop(props) {
+const AnalysisTop = (props) => {
   // Disable load button unless a location has been selected
   const loadDisabled = props.locationSelection ? false : true;
   return (
     <div>
       <h1>
         Analysis Page
-      </h1> 
+      </h1>
       <div>
         <FormControl style={{minWidth:150, marginRight:30}}>
           <InputLabel id="analysis">Analysis</InputLabel>
@@ -34,6 +34,7 @@ function AnalysisTop(props) {
           <MenuItem value={6}>Comments</MenuItem>
           <MenuItem value={7}>Global Vidoes</MenuItem>
           </Select>
+          <FormHelperText>Selected: {ANALYSIS[props.analysisSelection]}</FormHelperText>
         </FormControl>
         <FormControl style={{minWidth:150, marginRight:30}}>
           <InputLabel id="location">Location</InputLabel>

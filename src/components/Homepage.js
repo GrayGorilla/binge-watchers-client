@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from "@material-ui/core/Button";
 import logo from '../resources/logo-youtube.svg';
+import NavBar from '../components/shared-components/NavBar';
 import './Homepage.css';
 import { SERVER_PORT, SERVER_IP } from '../globals';
 
@@ -71,16 +72,22 @@ class Homepage extends React.Component {
     if (error) {
       return (
         <div className="App">
+          <NavBar />
           <header className="App-header">
-            Error: {error.message}
+            <h3>
+              Error: {error.message}
+            </h3>
           </header>
         </div>
       );
     } else if (!isLoaded) {
       return (
         <div className="App">
+          <NavBar />
           <header className="App-header">
-            Loading...  
+            <h3>
+              Loading...  
+            </h3>
           </header>
         </div>
       );
@@ -89,6 +96,7 @@ class Homepage extends React.Component {
     } else if (showData) {
       return (
         <div className="App">
+          <NavBar />
           <header className="App-header">
             <h1>Binge Watchers</h1>
             <img src={logo} className="App-logo" alt="logo" />
@@ -107,6 +115,7 @@ class Homepage extends React.Component {
     } else {
       return (
         <div className="App">
+          <NavBar />
           <header className="App-header">
             <h1>Binge Watchers</h1>
             <img src={logo} className="App-logo" alt="logo" />

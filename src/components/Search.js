@@ -10,7 +10,9 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
+import EllipsisText from "react-ellipsis-text";
 
+import NavBar from '../components/shared-components/NavBar';
 import { SERVER_PORT, SERVER_IP, ButtonID } from '../globals';
 import './Search.css'
 
@@ -742,7 +744,9 @@ class Search extends React.Component {
     if (error) {
       return (
         <div className="Search">
+          <NavBar />
           <header className="Search-header">
+            <br />
             <h3>
               Error: {error.message}
             </h3>
@@ -752,6 +756,7 @@ class Search extends React.Component {
     } else if (!isLoaded) {
       return (
         <div className="Search">
+          <NavBar />
           <header className="Search-header">
             <h3>
               Loading...  
@@ -763,6 +768,7 @@ class Search extends React.Component {
     } else {
       return (
         <div className="Search">
+          <NavBar />
           <header>
             <h1>Search Page</h1>
             <div style ={{padding:20}}>
@@ -948,23 +954,23 @@ class Search extends React.Component {
                       role="checkbox"
                     >
                       <TableCell padding="checkbox"></TableCell>
-                      <TableCell align="right">Entry ID</TableCell>
-                      <TableCell align="right">Video ID</TableCell>
-                      <TableCell align="right">Trending Date</TableCell>
-                      <TableCell align="right">Title</TableCell>
-                      <TableCell align="right">Channel Title</TableCell>
-                      <TableCell align="right">Category ID</TableCell>
-                      <TableCell align="right">Publish Time</TableCell>
-                      <TableCell align="right">Tags</TableCell>
-                      <TableCell align="right">Views</TableCell>
-                      <TableCell align="right">Likes</TableCell>
-                      <TableCell align="right">Dislikes</TableCell>
-                      <TableCell align="right">Comment Count</TableCell>
-                      <TableCell align="right">Thumbnail Link</TableCell>
-                      <TableCell align="right">Comments Disabled</TableCell>
-                      <TableCell align="right">Ratings Disabled</TableCell>
-                      <TableCell align="right">Video Error or Removed</TableCell>
-                      <TableCell align="right">Description</TableCell>
+                      <TableCell align="center">Entry ID</TableCell>
+                      <TableCell align="center">Video ID</TableCell>
+                      <TableCell align="center">Trending Date</TableCell>
+                      <TableCell align="center">Title</TableCell>
+                      <TableCell align="center">Channel Title</TableCell>
+                      <TableCell align="center">Category ID</TableCell>
+                      <TableCell align="center">Publish Time</TableCell>
+                      <TableCell align="center">Tags</TableCell>
+                      <TableCell align="center">Views</TableCell>
+                      <TableCell align="center">Likes</TableCell>
+                      <TableCell align="center">Dislikes</TableCell>
+                      <TableCell align="center">Comment Count</TableCell>
+                      <TableCell align="center">Thumbnail Link</TableCell>
+                      <TableCell align="center">Comments Disabled</TableCell>
+                      <TableCell align="center">Ratings Disabled</TableCell>
+                      <TableCell align="center">Video Error or Removed</TableCell>
+                      <TableCell align="center">Description</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -983,23 +989,31 @@ class Search extends React.Component {
                                 onChange={this.handleSelect}
                               />
                             </TableCell>
-                            <TableCell align="right">{entry[0]}</TableCell>
-                            <TableCell align="right">{entry[1]}</TableCell>
-                            <TableCell align="right">{entry[2]}</TableCell>
-                            <TableCell align="right">{entry[3]}</TableCell>
-                            <TableCell align="right">{entry[4]}</TableCell>
-                            <TableCell align="right">{entry[5]}</TableCell>
-                            <TableCell align="right">{entry[6]}</TableCell>
-                            <TableCell align="right">{entry[7]}</TableCell>
-                            <TableCell align="right">{entry[8]}</TableCell>
-                            <TableCell align="right">{entry[9]}</TableCell>
-                            <TableCell align="right">{entry[10]}</TableCell>
-                            <TableCell align="right">{entry[11]}</TableCell>
-                            <TableCell align="right">{entry[12]}</TableCell>
-                            <TableCell align="right">{entry[13]}</TableCell>
-                            <TableCell align="right">{entry[14]}</TableCell>
-                            <TableCell align="right">{entry[15]}</TableCell>
-                            <TableCell align="right">{entry[16]}</TableCell>
+                            <TableCell align="center">{entry[0]}</TableCell>
+                            <TableCell align="center">{entry[1]}</TableCell>
+                            <TableCell align="center">{entry[2]}</TableCell>
+                            <TableCell align="center">
+                              <EllipsisText text={entry[3]} length="30" />
+                            </TableCell>
+                            <TableCell align="center">{entry[4]}</TableCell>
+                            <TableCell align="center">{entry[5]}</TableCell>
+                            <TableCell align="center">{entry[6]}</TableCell>
+                            <TableCell align="center">
+                              <EllipsisText text={entry[7]} length="30" />
+                            </TableCell>
+                            <TableCell align="center">{entry[8]}</TableCell>
+                            <TableCell align="center">{entry[9]}</TableCell>
+                            <TableCell align="center">{entry[10]}</TableCell>
+                            <TableCell align="center">{entry[11]}</TableCell>
+                            <TableCell align="center">
+                              <EllipsisText text={entry[12]} length="30" />
+                            </TableCell>
+                            <TableCell align="center">{entry[13]}</TableCell>
+                            <TableCell align="center">{entry[14]}</TableCell>
+                            <TableCell align="center">{entry[15]}</TableCell>
+                            <TableCell align="center">
+                              <EllipsisText text={entry[16]} length="30" />
+                            </TableCell>
                           </TableRow>
                         );
                       })

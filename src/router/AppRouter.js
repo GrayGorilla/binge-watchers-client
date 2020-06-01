@@ -10,26 +10,24 @@ export const history = createBrowserHistory();
 
 const AppRouter = () => (
   <Router history={history}>
-    <div>
-      <Switch>
-        <Route 
-          path="/"
-          component={Homepage}
-          title="Home Page"
-          exact={true}
-        />
-        <Route
-          path="/search"
-          component={Search}
-          title="Search"
-        />
-        <Route
-          path="/analysis"
-          component={Analysis}
-          title="Analysis"
-        />
-      </Switch>
-    </div>
+    <Switch>
+      <Route 
+        path="/"
+        component={Homepage}
+        title="Home Page"
+        exact={true}
+      />
+      <Route
+        path="/search"
+        component={Search}
+        title="Search"
+      />
+      <Route
+        path="/analysis"
+        component={Analysis}
+        title="Analysis"
+      />
+    </Switch>
   </Router>
 );
 
