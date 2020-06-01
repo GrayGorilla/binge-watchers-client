@@ -572,6 +572,7 @@ class Analysis extends React.Component {
     let display;
     let metric;
     let value;
+    let blacklist = ["this", "what", "the", "of", "a", "to", "in", "with", "on", "and", "i", "for", "s", "is", "at", "ft", "my"];
     console.log('Creating graphic')
 
     switch(selected) {
@@ -584,8 +585,16 @@ class Analysis extends React.Component {
             </h4>
           );
         }
+        var flag;
         for (let key in buzz) {
-          if(!(key === "a" || key === "the" || key === "of" || key === "was" || key === "by" || key === "an")) {
+          flag = true;
+          var j;
+          for(j=0; j<blacklist.length; j++) {
+            if(key === blacklist[j]) {
+              flag = false;
+            }
+          }
+          if(flag === true) {
             display.push({word:key, count:buzz[key]});
           }
         }
@@ -623,8 +632,16 @@ class Analysis extends React.Component {
             </h4>
           );
         }
+        var flag;
         for (let key in tag) {
-          if(!(key === "a" || key === "the" || key === "of" || key === "was" || key === "by" || key === "an")) {
+          flag = true;
+          var j;
+          for(j=0; j<blacklist.length; j++) {
+            if(key === blacklist[j]) {
+              flag = false;
+            }
+          }
+          if(flag === true) {
             display.push({word:key, count:tag[key]});
           }
         }
