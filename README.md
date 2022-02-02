@@ -1,4 +1,9 @@
+# Binge Watchers (Client)
+Web App used to Analyze YouTube data.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+Click here to visit our [Binge Watchers Server](https://github.com/GrayGorilla/binge-watchers-server).
 
 ## Available Scripts
 
